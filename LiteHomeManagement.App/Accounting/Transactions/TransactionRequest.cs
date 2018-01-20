@@ -1,5 +1,4 @@
-﻿
-using LiteHomeManagement.App.Common;
+﻿using LiteHomeManagement.App.Common;
 
 namespace LiteHomeManagement.App.Accounting
 {
@@ -23,7 +22,7 @@ namespace LiteHomeManagement.App.Accounting
                 .With(nameof(Description), Description)
                 .With(nameof(Amount), Amount)
                 .With(nameof(timestamp), timestamp);
-            return new Event(AccountId, nameof(Transaction), 1, json, timestamp);
+            return new Event(nameof(Account), AccountId, nameof(Transaction), 1, json, timestamp);
         }
     }
 }

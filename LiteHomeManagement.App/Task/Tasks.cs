@@ -1,19 +1,20 @@
-﻿using LiteHomeManagement.App.Common;
+﻿using System.Linq;
+using LiteHomeManagement.App.Common;
 
 namespace LiteHomeManagement.App.Task
 {
     public sealed class Tasks
     {
-        private readonly IStore<TaskRecord> _taskRecords;
+        private readonly IEntityStore<TaskRecord> _taskRecords;
 
-        public Tasks(IStore<TaskRecord> taskRecords)
+        public Tasks(IEntityStore<TaskRecord> taskRecords)
         {
             _taskRecords = taskRecords;
         }
 
         public Response Create(CreateTask req)
         {
-            _taskRecords.Put(req.ToRecord());
+            _taskRecords.Put(req.Id, req.ToRecord());
             return Response.Success;
         }
 
@@ -21,6 +22,11 @@ namespace LiteHomeManagement.App.Task
         {
             _taskRecords.Remove(req.Id);
             return Response.Success;
+        }
+
+        public bool Exists(string taskId)
+        {
+            return _taskRecords.GetAll().Any(x => x.Id.Matches(taskId));
         }
     }
 }

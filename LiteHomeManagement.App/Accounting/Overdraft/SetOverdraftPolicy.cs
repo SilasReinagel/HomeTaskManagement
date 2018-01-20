@@ -18,7 +18,7 @@ namespace LiteHomeManagement.App.Accounting
             var json = new JsonObjectString()
                 .With(nameof(AccountId), AccountId)
                 .With(nameof(CanOverdraft), CanOverdraft).ToString();
-            return new Event(AccountId, nameof(OverdraftPolicySet), 1, json, Clock.UnixUtcNow);
+            return new Event(nameof(Account), AccountId, nameof(OverdraftPolicySet), 1, json, Clock.UnixUtcNow);
         }
     }
 }

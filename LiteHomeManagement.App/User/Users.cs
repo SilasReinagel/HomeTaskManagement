@@ -15,12 +15,24 @@ namespace LiteHomeManagement.App.User
 
         public Response Create(CreateUser req)
         {
-            return Record(x => x.Put(req.Id, new UserRecord { Id = req.Id, Name = req.Name, Username = req.Username, Roles = new DefaultUserRoles().ToHashSet() }));
+            return Record(x => x.Put(req.Id, 
+                    new UserRecord
+                    {
+                        Id = req.Id,
+                        Name = req.Name,
+                        Username = req.Username,
+                        Roles = new DefaultUserRoles().ToHashSet()
+                    }));
         }
 
         public Response AddRolesToUser(AddRoles req)
         {
             return Record(x => _userRecords.Update(req.UserId, u => u.Roles = u.Roles.Union(req.Roles).ToHashSet()));
+        }
+
+        public bool Exists(string userId)
+        {
+            return _userRecords.Contains(x => x.Id.Matches(userId));
         }
 
         public Response RemoveRolesFromUser(RemoveRoles req)

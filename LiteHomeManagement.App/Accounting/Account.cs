@@ -11,26 +11,20 @@ namespace LiteHomeManagement.App.Accounting
         public decimal Balance => Transactions.Sum(x => x.Amount);
         public bool CanOverdraft { get; private set; }
 
-        public Account(string userId)
+        public Account(string userId, IEnumerable<Event> events)
         {
             Id = userId;
-        }
-
-        public void Apply(IEnumerable<Event> events)
-        {
-            events.ToList().ForEach(e => Apply(e));
+            events.ForEach(Apply);
         }
 
         public ValidationResult ValidateProposed(Event e)
         {
             var issues = new List<string>();
-            var transactionsCopy = Transactions.ToList();
 
             Apply(e);
             if (!CanOverdraft && Balance < 0)
                 issues.Add($"Account {Id} cannot withdraw more than its current balance.");
-
-            Transactions = transactionsCopy;
+            
             return new ValidationResult(issues);
         }
 

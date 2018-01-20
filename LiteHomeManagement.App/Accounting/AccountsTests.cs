@@ -1,4 +1,5 @@
-﻿using LiteHomeManagement.App.Common;
+﻿using LiteHomeManagement.App.Accounting.Transactions;
+using LiteHomeManagement.App.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LiteHomeManagement.App.Accounting
@@ -7,6 +8,7 @@ namespace LiteHomeManagement.App.Accounting
     public sealed class AccountsTests
     {
         private const string SampleAccountId = "accountId";
+        private const string SampleAccountId2 = "accountId2";
 
         private Accounts _accounts;
 
@@ -35,12 +37,11 @@ namespace LiteHomeManagement.App.Accounting
         }
 
         [TestMethod]
-        public void Accounts_DebitMoreThanAccountBalanced_Error()
+        public void Accounts_DebitMoreThanAccountBalanced_InvalidState()
         {
             var resp = _accounts.Apply(new TransactionRequest(SampleAccountId, "description", -2m));
 
-            Assert.IsFalse(resp.Succeeded);
-            Assert.AreEqual(resp.Status, ResponseStatus.InvalidState);
+            resp.AssertStatusIs(ResponseStatus.InvalidState);
         }
 
         [TestMethod]
@@ -61,6 +62,27 @@ namespace LiteHomeManagement.App.Accounting
 
             Assert.IsTrue(resp.Succeeded);
             Assert.AreEqual(-4m, _accounts.Get(SampleAccountId).Balance);
+        }
+
+        [TestMethod]
+        public void Accounts_Transfer_BalancesCorrect()
+        {
+            _accounts.Apply(new TransactionRequest(SampleAccountId, "description", 3m));
+            var resp = _accounts.Apply(new TransferRequest(SampleAccountId, SampleAccountId2, "description", 1.01m));
+
+            Assert.IsTrue(resp.Succeeded);
+            Assert.AreEqual(1.99m, _accounts.Get(SampleAccountId).Balance);
+            Assert.AreEqual(1.01m, _accounts.Get(SampleAccountId2).Balance);
+        }
+
+        [TestMethod]
+        public void Accounts_TransferWithInsufficientBalance_RequestRejected()
+        {
+            var resp = _accounts.Apply(new TransferRequest(SampleAccountId, SampleAccountId2, "description", 1.01m));
+
+            resp.AssertStatusIs(ResponseStatus.InvalidState);
+            Assert.AreEqual(0m, _accounts.Get(SampleAccountId).Balance);
+            Assert.AreEqual(0m, _accounts.Get(SampleAccountId2).Balance);
         }
     }
 }

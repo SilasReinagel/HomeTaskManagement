@@ -10,7 +10,7 @@ namespace LiteHomeManagement.App.Task
         [TestInitialize]
         public void Init()
         {
-            _rates = new TaskRates();
+            _rates = new TaskRates(13, 2);
         }
 
         [TestMethod]

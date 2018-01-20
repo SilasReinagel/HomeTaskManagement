@@ -9,13 +9,13 @@ namespace LiteHomeManagement.App.Task
     {
         private const string TaskName = "taskname";
 
-        private IStore<TaskRecord> _taskRecords;
+        private IEntityStore<TaskRecord> _taskRecords;
         private Tasks _task;
 
         [TestInitialize]
         public void Init()
         {
-            _taskRecords = new InMemoryStore<TaskRecord>();
+            _taskRecords = new InMemoryEntityStore<TaskRecord>();
             _task = new Tasks(_taskRecords);
         }
 
@@ -41,7 +41,7 @@ namespace LiteHomeManagement.App.Task
 
         private Response CreateTask()
         {
-            return _task.Create(new CreateTask(TaskName, 5, Importance.Normal, TaskFrequency.Daily));
+            return _task.Create(new CreateTask("id", TaskName, 5, Importance.Normal, TaskFrequency.Daily));
         }
     }
 }

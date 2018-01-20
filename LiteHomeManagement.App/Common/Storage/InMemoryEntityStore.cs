@@ -18,10 +18,9 @@ namespace LiteHomeManagement.App.Common
             return _items[id];
         }
 
-        public string Put(string id, T obj)
+        public void Put(string id, T obj)
         {
             _items[id] = obj;
-            return id;
         }
 
         public void Remove(string id)

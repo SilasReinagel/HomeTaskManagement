@@ -25,6 +25,11 @@ namespace LiteHomeManagement.App.Common
             return IsValid ? "Valid" : $"Invalid: {IssuesMessage}";
         }
 
+        public static implicit operator bool(ValidationResult result)
+        {
+            return result.IsValid;
+        }
+
         public string IssuesMessage => string.Join(Environment.NewLine, ValidationIssues);
     }
 }

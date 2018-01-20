@@ -9,5 +9,6 @@ namespace LiteHomeManagement.App.Common
         BadRequest,
         DependencyFailure,
         InvalidState,
+        UnknownEntity,
     }
 }

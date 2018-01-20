@@ -49,7 +49,7 @@ namespace LiteHomeManagement.App.Common
             return this;
         }
 
-        public JsonObjectString With(string name, decimal? number)
+        public JsonObjectString With(string name, decimal number)
         {
             _entries.Add($"\"{name.ToCamelCase()}\":{number}");
             return this;

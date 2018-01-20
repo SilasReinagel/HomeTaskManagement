@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace LiteHomeManagement.App.Common
 {
@@ -9,19 +8,20 @@ namespace LiteHomeManagement.App.Common
 
         public void Commit(IEnumerable<Event> events)
         {
-            events.ToList().ForEach(e => Read(e.EntityId).Add(e));
+            events.ForEach(e => Read(e.EntityType, e.EntityId).Add(e));
         }
 
-        public IEnumerable<Event> GetEvents(string entityId)
+        public IEnumerable<Event> GetEvents<T>(string entityId)
         {
-            return Read(entityId);
+            return Read(typeof(T).Name, entityId);
         }
 
-        private List<Event> Read(string id)
+        private List<Event> Read(string type, string id)
         {
-            if (!_events.ContainsKey(id))
-                _events[id] = new List<Event>();
-            return _events[id];
+            var key = $"{type}-{id}";
+            if (!_events.ContainsKey(key))
+                _events[key] = new List<Event>();
+            return _events[key];
         }
     }
 }

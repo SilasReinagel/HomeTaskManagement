@@ -2,7 +2,7 @@
 
 namespace LiteHomeManagement.App.Common
 {
-    public struct UnixUtcTime
+    public struct UnixUtcTime : IComparable
     {
         public long Millis { get; }
 
@@ -69,6 +69,13 @@ namespace LiteHomeManagement.App.Common
         private static long ToLong(TimeSpan duration)
         {
             return Convert.ToInt64(Math.Round(duration.TotalMilliseconds));
+        }
+
+        public int CompareTo(object obj)
+        {
+            if (!(obj is UnixUtcTime))
+                throw new ArgumentException($"Cannot compare {nameof(UnixUtcTime)} to {obj.GetType().Name}");
+            return Millis.CompareTo(((UnixUtcTime)obj).Millis);
         }
     }
 }

@@ -4,9 +4,9 @@ namespace LiteHomeManagement.App.Common
 {
     public static class EventStoreExtensions
     {
-        public static void Commit(this IEventStore events, Event e)
+        public static void Commit(this IEventStore events, params Event[] e)
         {
-            events.Commit(new List<Event> { e });
+            events.Commit(e);
         }
     }
 }

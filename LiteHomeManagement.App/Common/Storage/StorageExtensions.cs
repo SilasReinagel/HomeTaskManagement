@@ -12,25 +12,11 @@ namespace LiteHomeManagement.App.Common
                 .Any(condition);
         }
 
-        public static bool Contains<T>(this IStore<T> store, Func<T, bool> condition)
-        {
-            return store
-                .GetAll()
-                .Any(condition);
-        }
-
         public static void Update<T>(this IEntityStore<T> store, string id, Action<T> update)
         {
             var entity = store.Get(id);
             update(entity);
             store.Put(id, entity);
-        }
-
-        public static void Update<T>(this IStore<T> store, string id, Action<T> update)
-        {
-            var entity = store.Get(id);
-            update(entity);
-            store.Put(entity);
         }
     }
 }
