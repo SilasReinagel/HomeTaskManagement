@@ -13,5 +13,10 @@ namespace LiteHomeManagement.App.Common
         {
             return Char.ToLowerInvariant(s[0]) + s.Substring(1);
         }
+
+        public static string OrDefault(this string s, string s2 = "")
+        {
+            return string.IsNullOrWhiteSpace(s) ? s2 : s;
+        }
     }
 }

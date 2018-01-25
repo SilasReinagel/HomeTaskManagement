@@ -21,5 +21,10 @@ namespace LiteHomeManagement.App.Common
         {
             return JsonSerializer.ToJsonString(obj, StandardResolver.CamelCase);
         }
+
+        public static byte[] ToBytes(object obj)
+        {
+            return JsonSerializer.Serialize(obj);
+        }
     }
 }
