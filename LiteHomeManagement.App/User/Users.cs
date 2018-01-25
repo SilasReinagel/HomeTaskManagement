@@ -13,6 +13,11 @@ namespace LiteHomeManagement.App.User
             _userRecords = userRecords;
         }
 
+        public bool Exists(string userId)
+        {
+            return _userRecords.Contains(x => x.Id.Matches(userId));
+        }
+
         public Response Create(CreateUser req)
         {
             return Record(x => x.Put(req.Id, 
@@ -28,11 +33,6 @@ namespace LiteHomeManagement.App.User
         public Response AddRolesToUser(AddRoles req)
         {
             return Record(x => _userRecords.Update(req.UserId, u => u.Roles = u.Roles.Union(req.Roles).ToHashSet()));
-        }
-
-        public bool Exists(string userId)
-        {
-            return _userRecords.Contains(x => x.Id.Matches(userId));
         }
 
         public Response RemoveRolesFromUser(RemoveRoles req)

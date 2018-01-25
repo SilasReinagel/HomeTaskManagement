@@ -7,7 +7,7 @@ namespace LiteHomeManagement.App.Common
         public string ErrorMessage { get; }
         internal bool Succeeded => Status == ResponseStatus.Succeeded;
 
-        public Response(ResponseStatus status, string errorMessage)
+        private Response(ResponseStatus status, string errorMessage)
         {
             Status = status;
             ErrorMessage = errorMessage;

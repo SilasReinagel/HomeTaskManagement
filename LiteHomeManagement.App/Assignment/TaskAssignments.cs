@@ -21,13 +21,10 @@ namespace LiteHomeManagement.App.Assignment
         {
             if (!_tasks.Exists(req.TaskId))
                 return Response.Errored(ResponseStatus.UnknownEntity, $"Unknown Task {req.TaskId}");
-            if (!_users.Exists(req.UserId))
-                return Response.Errored(ResponseStatus.UnknownEntity, $"Unknown User {req.UserId}");
-            if (req.AssignmentStart.IsBefore(Clock.UnixUtcNow))
-                return Response.Errored(ResponseStatus.InvalidState, $"Cannot assign Task at past point in time.");
-            
-            _eventStore.Commit(req.ToEvent());
-            return Response.Success;
+            return _users
+                .IfExists(req.UserId)
+                .And(req.StartsAt.IsNotPast())
+                .Then(() => _eventStore.Commit(req.ToEvent()));
         }
 
         public AssignedTask ForTask(string taskId)

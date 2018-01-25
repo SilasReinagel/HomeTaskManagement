@@ -6,18 +6,18 @@ namespace LiteHomeManagement.App.Assignment
     {
         public string TaskId { get; }
         public string UserId { get; }
-        public UnixUtcTime AssignmentStart { get; }
+        public UnixUtcTime StartsAt { get; }
 
         public AssignTaskRequest(string taskId, string userId, UnixUtcTime assignmentStart)
         {
             TaskId = taskId;
             UserId = userId;
-            AssignmentStart = assignmentStart;
+            StartsAt = assignmentStart;
         }
 
         public Event ToEvent()
         {
-            return new TaskAssigned(TaskId, UserId, AssignmentStart).ToEvent();
+            return new TaskAssigned(TaskId, UserId, StartsAt).ToEvent();
         }
     }
 }

@@ -29,7 +29,7 @@ namespace LiteHomeManagement.App.Assignment
         [TestMethod]
         public void TaskAssignments_AssignUnknownTask_UnknownEntity()
         {
-            var resp = _assignments.Apply(new AssignTaskRequest("unknownTaskId", "userId", Clock.UnixUtcNow));
+            var resp = _assignments.Apply(new AssignTaskRequest("unknownTaskId", User1, Clock.UnixUtcNow));
 
             resp.AssertStatusIs(ResponseStatus.UnknownEntity);
         }
@@ -42,6 +42,17 @@ namespace LiteHomeManagement.App.Assignment
             var resp = _assignments.Apply(new AssignTaskRequest(WeeklyTaskId, "unknownUserId", Clock.UnixUtcNow));
 
             resp.AssertStatusIs(ResponseStatus.UnknownEntity);
+        }
+
+        [TestMethod]
+        public void TaskAssignments_AssignTaskBeforeNow_InvalidState()
+        {
+            SetupSampleTasks();
+            SetupSampleUsers();
+
+            var resp = _assignments.Apply(new AssignTaskRequest(WeeklyTaskId, User1, Clock.UnixUtcNow.Minus(TimeSpan.FromHours(1))));
+
+            resp.AssertStatusIs(ResponseStatus.InvalidState);
         }
 
         [TestMethod]

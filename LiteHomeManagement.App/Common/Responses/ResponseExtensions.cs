@@ -23,5 +23,10 @@ namespace LiteHomeManagement.App.Common
                 ? nextAction()
                 : resp;
         }
+
+        public static Response And(this Response first, Response second)
+        {
+            return first.Then(() => second);
+        }
     }
 }
