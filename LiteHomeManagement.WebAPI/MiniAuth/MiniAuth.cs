@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace LiteHomeManagement.WebAPI.Auth
 {
-    public class MiniAuth : IValidate<HttpRequest>
+    public sealed class MiniAuth : IValidate<HttpRequest>
     {
         private readonly Authenticator _auth;
 

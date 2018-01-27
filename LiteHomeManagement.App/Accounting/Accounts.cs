@@ -1,4 +1,5 @@
 ﻿using LiteHomeManagement.App.Common;
+using System.Collections.Generic;
 
 namespace LiteHomeManagement.App.Accounting
 {
@@ -9,6 +10,11 @@ namespace LiteHomeManagement.App.Accounting
         public Accounts(IEventStore eventStore)
         {
             _eventStore = eventStore;
+        }
+
+        public IEnumerable<Account> GetAll()
+        {
+            return _eventStore.GetAll(x => new Account(x.Id, x.Events));
         }
 
         public Account Get(string userId)

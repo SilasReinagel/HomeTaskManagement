@@ -17,11 +17,11 @@ namespace LiteHomeManagement.App.Common
             return Read(typeof(T).Name, entityId);
         }
 
-        public IDictionary<string, IEnumerable<Event>> GetEvents<T>()
+        public IEnumerable<EventStream> GetEvents<T>()
         {
             var keyPrefix = $"{typeof(T).Name}-";
-            return _events.Where(x => x.Key.StartsWith(keyPrefix))                
-                .ToDictionary(x => x.Key.Replace(keyPrefix, ""), x => (IEnumerable<Event>)x.Value);
+            return _events.Where(x => x.Key.StartsWith(keyPrefix))
+                .Select(x => new EventStream { Id = x.Key.Without(keyPrefix), Events = x.Value.OrderBy(e => e.OccurredOn) });
         }
 
         private List<Event> Read(string type, string id)

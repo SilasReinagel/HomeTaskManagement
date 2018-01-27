@@ -111,7 +111,7 @@ namespace LiteHomeManagement.App.Pledge
         }
 
         [TestMethod]
-        public void Pledge_FundPledgesThroughDistantFutureTime_PledgesFunded()
+        public void Pledges_FundPledgesThroughDistantFutureTime_PledgesFunded()
         {
             _pledges.Set(new SetPledge(User1, PledgeAmount, _now));
 

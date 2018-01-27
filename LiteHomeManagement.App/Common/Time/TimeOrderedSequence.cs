@@ -4,12 +4,12 @@ using System.Linq;
 
 namespace LiteHomeManagement.App.Common
 {
-    public sealed class TimeOrderedSequence<T> : IEnumerable<KeyValuePair<UnixUtcTime, T>>
+    public sealed class History<T> : IEnumerable<KeyValuePair<UnixUtcTime, T>>
     {
         private readonly T _default;
         private readonly List<KeyValuePair<UnixUtcTime, T>> _sequence = new List<KeyValuePair<UnixUtcTime, T>>();
 
-        public TimeOrderedSequence(T defaultValue)
+        public History(T defaultValue)
         {
             _default = defaultValue;
         }

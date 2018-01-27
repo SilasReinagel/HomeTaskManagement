@@ -6,8 +6,8 @@ namespace LiteHomeManagement.App.Pledge
 {
     public sealed class UserPledge
     {
-        private readonly TimeOrderedSequence<int> _pledgeAmounts = new TimeOrderedSequence<int>(0);
-        private readonly TimeOrderedSequence<int> _fundedAmounts = new TimeOrderedSequence<int>(0);
+        private readonly History<int> _pledgeAmounts = new History<int>(0);
+        private readonly History<int> _fundedAmounts = new History<int>(0);
         
         public string UserId { get; }
         public UnixUtcTime FundedThrough => _pledgeAmounts.None() ? Clock.UnixUtcNow

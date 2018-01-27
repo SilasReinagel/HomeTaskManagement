@@ -18,5 +18,10 @@ namespace LiteHomeManagement.App.Common
         {
             return string.IsNullOrWhiteSpace(s) ? s2 : s;
         }
+
+        public static string Without(this string s, string s2)
+        {
+            return s.Replace(s2, "");
+        }
     }
 }

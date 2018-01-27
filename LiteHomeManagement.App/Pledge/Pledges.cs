@@ -54,14 +54,14 @@ namespace LiteHomeManagement.App.Pledge
             var fundedThrough = pledge.FundedThrough.Plus(_settings.Frequency);
             _eventStore.Commit(new PledgeFundedThrough(pledge.UserId, pledgeAmount, fundedThrough).ToEvent());
             if (through.IsAfter(fundedThrough))
-                Fund(Get(pledge.UserId), through);
+                return Fund(Get(pledge.UserId), through);
 
             return Response.Success;
         }
 
         private IEnumerable<UserPledge> GetAll()
         {
-            return _eventStore.GetEvents<UserPledge>().Select(x => new UserPledge(x.Key, x.Value));
+            return _eventStore.GetAll(x => new UserPledge(x.Id, x.Events));
         }
     }
 }

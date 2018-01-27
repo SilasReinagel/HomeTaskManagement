@@ -23,5 +23,9 @@ namespace LiteHomeManagement.App.Common
                 : defaultValue;
         }
 
+        public static IEnumerable<T> Finalize<T>(this IEnumerable<T> items)
+        {
+            return items.ToList();
+        }
     }
 }

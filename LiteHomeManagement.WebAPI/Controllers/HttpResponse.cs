@@ -9,7 +9,7 @@ namespace LiteHomeManagement.WebAPI
 {
     public sealed class HttpResponse : IActionResult
     {
-        private static readonly Dictionary<ResponseStatus, HttpStatusCode> _statusCode = new Dictionary<ResponseStatus, HttpStatusCode>
+        private static readonly Dictionary<ResponseStatus, HttpStatusCode> _statusCodes = new Dictionary<ResponseStatus, HttpStatusCode>
         {
             { ResponseStatus.AStupidDeveloperForgotToSpecify, HttpStatusCode.InternalServerError },
             { ResponseStatus.BadRequest, HttpStatusCode.BadRequest },
@@ -20,18 +20,26 @@ namespace LiteHomeManagement.WebAPI
             { ResponseStatus.Succeeded, HttpStatusCode.OK },
         };
 
-        private readonly Response _resp;
+        private readonly HttpStatusCode _statusCode;
+        private readonly byte[] _content;
+
+        public HttpResponse(object content)
+            : this(HttpStatusCode.OK, Json.ToBytes(content)) { }
 
         public HttpResponse(Response resp)
+            : this(_statusCodes[resp.Status], Json.ToBytes(resp)) { }
+
+        public HttpResponse(HttpStatusCode statusCode, byte[] content)
         {
-            _resp = resp;
+            _statusCode = statusCode;
+            _content = content;
         }
 
         public Task ExecuteResultAsync(ActionContext context)
         {
             context.HttpContext.Response.ContentType = "application/json";
-            context.HttpContext.Response.StatusCode = (int)_statusCode[_resp.Status];
-            context.HttpContext.Response.Body = new MemoryStream(Json.ToBytes(_resp));
+            context.HttpContext.Response.StatusCode = (int)_statusCode;
+            context.HttpContext.Response.Body = new MemoryStream(_content);
             return Task.CompletedTask;
         }
     }

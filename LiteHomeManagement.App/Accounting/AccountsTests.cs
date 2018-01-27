@@ -1,6 +1,6 @@
-﻿using LiteHomeManagement.App.Accounting;
-using LiteHomeManagement.App.Common;
+﻿using LiteHomeManagement.App.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 
 namespace LiteHomeManagement.App.Accounting
 {
@@ -83,6 +83,19 @@ namespace LiteHomeManagement.App.Accounting
             resp.AssertStatusIs(ResponseStatus.InvalidState);
             Assert.AreEqual(0m, _accounts.Get(SampleAccountId).Balance);
             Assert.AreEqual(0m, _accounts.Get(SampleAccountId2).Balance);
+        }
+
+        [TestMethod]
+        public void Accounts_GetAll_AreCorrect()
+        {
+            _accounts.Apply(new TransactionRequest(SampleAccountId, "description", 2m));
+            _accounts.Apply(new TransactionRequest(SampleAccountId2, "description", 3m));
+
+            var allAccounts = _accounts.GetAll();
+
+            Assert.AreEqual(2, allAccounts.Count());
+            Assert.AreEqual(2m, allAccounts.Single(x => x.Id.Matches(SampleAccountId)).Balance);
+            Assert.AreEqual(3m, allAccounts.Single(x => x.Id.Matches(SampleAccountId2)).Balance);
         }
     }
 }

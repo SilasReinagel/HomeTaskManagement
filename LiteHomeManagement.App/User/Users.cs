@@ -18,6 +18,11 @@ namespace LiteHomeManagement.App.User
             return _userRecords.Contains(x => x.Id.Matches(userId));
         }
 
+        public UserRecord Get(string userId)
+        {
+            return _userRecords.Get(userId);
+        }
+
         public Response Create(CreateUser req)
         {
             return Record(x => x.Put(req.Id, 
