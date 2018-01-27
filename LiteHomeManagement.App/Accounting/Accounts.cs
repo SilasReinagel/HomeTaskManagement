@@ -1,5 +1,4 @@
-﻿using LiteHomeManagement.App.Accounting.Transactions;
-using LiteHomeManagement.App.Common;
+﻿using LiteHomeManagement.App.Common;
 
 namespace LiteHomeManagement.App.Accounting
 {

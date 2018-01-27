@@ -1,13 +1,18 @@
 ﻿using LiteHomeManagement.App.Common;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LiteHomeManagement.App.Pledge
 {
     public sealed class UserPledge
     {
-        private TimeOrderedSequence<int> _pledgeAmounts = new TimeOrderedSequence<int>(0);
-
+        private readonly TimeOrderedSequence<int> _pledgeAmounts = new TimeOrderedSequence<int>(0);
+        private readonly TimeOrderedSequence<int> _fundedAmounts = new TimeOrderedSequence<int>(0);
+        
         public string UserId { get; }
+        public UnixUtcTime FundedThrough => _pledgeAmounts.None() ? Clock.UnixUtcNow
+            : _fundedAmounts.None() ? _pledgeAmounts.First().Key
+            : _fundedAmounts.Last().Key;
 
         public UserPledge(string userId, IEnumerable<Event> events)
         {
@@ -24,6 +29,13 @@ namespace LiteHomeManagement.App.Pledge
         {
             if (e.Name.Matches(nameof(PledgeAmountSet)))
                 Apply(e.PayloadAs<PledgeAmountSet>());
+            if (e.Name.Matches(nameof(PledgeFundedThrough)))
+                Apply(e.PayloadAs<PledgeFundedThrough>());
+        }
+
+        private void Apply(PledgeFundedThrough e)
+        {
+            _fundedAmounts.Add(new UnixUtcTime(e.Timestamp), e.Amount);
         }
 
         private void Apply(PledgeAmountSet e)

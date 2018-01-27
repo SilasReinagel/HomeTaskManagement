@@ -1,4 +1,4 @@
-﻿using LiteHomeManagement.App.Accounting.Transactions;
+﻿using LiteHomeManagement.App.Accounting;
 using LiteHomeManagement.App.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

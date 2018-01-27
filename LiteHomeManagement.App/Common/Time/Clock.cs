@@ -16,6 +16,15 @@ namespace LiteHomeManagement.App.Common
             _utcClock = () => DateTimeOffset.UtcNow;
         }
 
+        public static void Advance(TimeSpan duration)
+        {
+            if (!_isFrozen)
+                throw new InvalidOperationException("Cannot alter actual system time.");
+
+            var newTime = UtcNow.Add(duration);
+            _utcClock = () => newTime;
+        }
+
         public static void Freeze()
         {
             if (_isFrozen)

@@ -1,6 +1,6 @@
 ﻿using LiteHomeManagement.App.Common;
 
-namespace LiteHomeManagement.App.Accounting.Transactions
+namespace LiteHomeManagement.App.Accounting
 {
     public sealed class TransferRequest
     {

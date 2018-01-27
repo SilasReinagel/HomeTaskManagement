@@ -18,5 +18,10 @@ namespace LiteHomeManagement.App.Common
             return new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)
                 .Add(TimeSpan.FromMilliseconds(epoch._time));
         }
+
+        public static implicit operator UnixUtcTime(Epoch epoch)
+        {
+            return epoch._time;
+        }
     }
 }

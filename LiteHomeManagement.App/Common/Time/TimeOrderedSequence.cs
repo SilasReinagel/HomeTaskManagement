@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace LiteHomeManagement.App.Common
 {
-    public sealed class TimeOrderedSequence<T>
+    public sealed class TimeOrderedSequence<T> : IEnumerable<KeyValuePair<UnixUtcTime, T>>
     {
         private readonly T _default;
-        private SortedList<UnixUtcTime, T> _sequence = new SortedList<UnixUtcTime, T>();
+        private readonly List<KeyValuePair<UnixUtcTime, T>> _sequence = new List<KeyValuePair<UnixUtcTime, T>>();
 
         public TimeOrderedSequence(T defaultValue)
         {
@@ -15,7 +16,8 @@ namespace LiteHomeManagement.App.Common
 
         public void Add(UnixUtcTime time, T value)
         {
-            _sequence.Add(time, value);
+            _sequence.Add(new KeyValuePair<UnixUtcTime, T>(time, value));
+            _sequence.Sort((l, r) => l.Key.CompareTo(r.Key));
         }
 
         public T At(UnixUtcTime time)
@@ -23,6 +25,16 @@ namespace LiteHomeManagement.App.Common
             return _sequence.Where(x => !x.Key.IsAfter(time))
                 .Select(x => x.Value)
                 .LastOrDefault(_default);
+        }
+
+        public IEnumerator<KeyValuePair<UnixUtcTime, T>> GetEnumerator()
+        {
+            return ((IEnumerable<KeyValuePair<UnixUtcTime, T>>)_sequence).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable<KeyValuePair<UnixUtcTime, T>>)_sequence).GetEnumerator();
         }
     }
 }

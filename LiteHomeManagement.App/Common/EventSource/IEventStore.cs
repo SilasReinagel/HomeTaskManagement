@@ -6,5 +6,6 @@ namespace LiteHomeManagement.App.Common
     {
         void Commit(IEnumerable<Event> events);
         IEnumerable<Event> GetEvents<T>(string entityId);
+        IDictionary<string, IEnumerable<Event>> GetEvents<T>();
     }
 }
