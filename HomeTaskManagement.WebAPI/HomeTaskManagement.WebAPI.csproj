@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HomeTaskManagement.App\HomeTaskManagement.App.csproj" />
+    <ProjectReference Include="..\HomeTaskManagement.Sql\HomeTaskManagement.Sql.csproj" />
   </ItemGroup>
 
 </Project>

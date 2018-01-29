@@ -11,7 +11,7 @@ namespace HomeTaskManagement.WebAPI.Controllers
         [HttpGet]
         public IActionResult GetAllAccountBalances([FromServices]Accounts accounts, [FromServices]Users users)
         {
-            return new HttpResponse(accounts.GetAll()
+            return new JsonHttpResponse(accounts.GetAll()
                 .Select(x => new AccountBalance { Name = users.Get(x.Id).Name, Balance = x.Balance }));
         }
     }

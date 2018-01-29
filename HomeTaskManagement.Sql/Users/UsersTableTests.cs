@@ -18,7 +18,6 @@ namespace HomeTaskManagement.Sql.Users
         public void Init()
         {
             var db = new SqlDatabase(new EnvironmentVariable("HomeTaskManagementSqlConnection"));
-            var isHealthy = db.IsHealthy();
             _users = new UsersTable(db);
         }
 
@@ -46,7 +45,7 @@ namespace HomeTaskManagement.Sql.Users
             Assert.AreEqual(sampleUser.Id, user.Id);
             Assert.AreEqual(sampleUser.Username, user.Username);
             Assert.AreEqual(sampleUser.Name, user.Name);
-            Assert.AreEqual(sampleUser.Roles.Count(), sampleUser.Roles.Union(user.Roles).Count());
+            Assert.AreEqual(sampleUser.Roles.Count, sampleUser.Roles.Union(user.Roles).Count());
         }
     }
 }

@@ -24,7 +24,7 @@ namespace HomeTaskManagement.App.Common
 
         public static byte[] ToBytes(object obj)
         {
-            return JsonSerializer.Serialize(obj);
+            return JsonSerializer.Serialize(obj, StandardResolver.CamelCase);
         }
     }
 }

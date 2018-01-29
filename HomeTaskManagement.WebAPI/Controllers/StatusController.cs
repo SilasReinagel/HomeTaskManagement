@@ -7,15 +7,13 @@ namespace HomeTaskManagement.WebAPI.Controllers
     [Route("api/status")]
     public sealed class StatusController : Controller
     {
-        private readonly MiniAuth _auth = new MiniAuth(new EnvironmentVariable("HomeTaskManagementSecret"));
-
         [HttpGet]
-        public IActionResult GetStatus()
+        public IActionResult GetStatus([FromServices]MiniAuth auth, [FromServices]AppHealth appStatus)
         {
-            if (!_auth.Validate(Request))
+            if (!auth.Validate(Request))
                 return Unauthorized();
             
-            return new HttpResponse(App.Common.Response.Success);
+            return new JsonHttpResponse(appStatus);
         }
     }
 }

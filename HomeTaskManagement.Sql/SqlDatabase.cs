@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using HomeTaskManagement.App.Common;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -6,9 +7,11 @@ using System.Linq;
 
 namespace HomeTaskManagement.Sql
 {
-    public sealed class SqlDatabase
+    public sealed class SqlDatabase : IMonitoredComponent
     {
         private readonly SqlConnection _conn;
+
+        public string Name => "Sql Connection";
 
         public SqlDatabase(string connectionString)
             : this(new SqlConnection(connectionString)) { }
@@ -18,16 +21,16 @@ namespace HomeTaskManagement.Sql
             _conn = connection;
         }
 
-        public bool IsHealthy()
+        public HealthStatus GetStatus()
         {
             try
             {
                 _conn.Execute("SELECT 1");
-                return true;
+                return HealthStatus.Healthy;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return false;
+                return HealthStatus.Unhealthy;
             }
         }
 
@@ -45,5 +48,7 @@ namespace HomeTaskManagement.Sql
         {
             _conn.Execute(sql, parameters);
         }
+
+
     }
 }
