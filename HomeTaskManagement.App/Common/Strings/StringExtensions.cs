@@ -23,5 +23,12 @@ namespace HomeTaskManagement.App.Common
         {
             return s.Replace(s2, "");
         }
+
+        public static string Required(this string s, string name)
+        {
+            if (string.IsNullOrWhiteSpace(s))
+                throw new ArgumentNullException($"String '{name}' was null or empty.");
+            return s;
+        }
     }
 }

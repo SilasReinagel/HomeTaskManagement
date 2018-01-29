@@ -5,6 +5,7 @@
     <StartupObject>HomeTaskManagement.WebAPI.Startup</StartupObject>
     <AssemblyName>HomeTaskManagement.WebAPI</AssemblyName>
     <RootNamespace>HomeTaskManagement.WebAPI</RootNamespace>
+    <Configurations>Debug;Release;Integration</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

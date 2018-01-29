@@ -5,6 +5,7 @@ namespace HomeTaskManagement.App.User
     {
         Basic,
         Admin,
-        Approver
+        Approver,
+        Service
     }
 }

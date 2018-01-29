@@ -1,4 +1,7 @@
-CREATE SCHEMA HomeTask AUTHORIZATION HomeTaskAdmin
+IF NOT EXISTS (SELECT  schema_name FROM information_schema.schemata WHERE   schema_name = 'HomeTask' ) 
+	BEGIN
+		EXEC ('CREATE SCHEMA HomeTask AUTHORIZATION HomeTaskAdmin')
+	END
 GO
 
 ---------- Create Users Table ----------
@@ -12,8 +15,6 @@ CREATE TABLE HomeTask.Users (
 	Name varchar(255) NOT NULL,
 	Roles varchar(512) NOT NULL
 )
-
-CREATE UNIQUE CLUSTERED INDEX UCX_Users_Id ON HomeTask.Users (Id)
 GO
 
 ---------- Create Tasks Table ----------
@@ -28,6 +29,5 @@ CREATE TABLE HomeTask.Tasks (
 	Frequency varchar(32) NOT NULL,
 	Importance varchar(32) NOT NULL
 )
-
-CREATE UNIQUE CLUSTERED INDEX UCX_Tasks_Id ON HomeTask.Tasks (Id)
 GO
+

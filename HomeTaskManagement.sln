@@ -7,24 +7,31 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeTaskManagement.WebAPI",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeTaskManagement.App", "HomeTaskManagement.App\HomeTaskManagement.App.csproj", "{704B7CED-9999-46C4-989D-4A935B411E15}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeTaskManagement.Sql", "HomeTaskManagement.Sql\HomeTaskManagement.Sql.csproj", "{2E4B5F72-035F-4731-9C89-C248B8965664}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeTaskManagement.Sql", "HomeTaskManagement.Sql\HomeTaskManagement.Sql.csproj", "{2E4B5F72-035F-4731-9C89-C248B8965664}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Integration|Any CPU = Integration|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{B25199B2-7818-4F52-9C9A-8BE435C166D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B25199B2-7818-4F52-9C9A-8BE435C166D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B25199B2-7818-4F52-9C9A-8BE435C166D9}.Integration|Any CPU.ActiveCfg = Integration|Any CPU
+		{B25199B2-7818-4F52-9C9A-8BE435C166D9}.Integration|Any CPU.Build.0 = Integration|Any CPU
 		{B25199B2-7818-4F52-9C9A-8BE435C166D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B25199B2-7818-4F52-9C9A-8BE435C166D9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{704B7CED-9999-46C4-989D-4A935B411E15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{704B7CED-9999-46C4-989D-4A935B411E15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{704B7CED-9999-46C4-989D-4A935B411E15}.Integration|Any CPU.ActiveCfg = Integration|Any CPU
+		{704B7CED-9999-46C4-989D-4A935B411E15}.Integration|Any CPU.Build.0 = Integration|Any CPU
 		{704B7CED-9999-46C4-989D-4A935B411E15}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{704B7CED-9999-46C4-989D-4A935B411E15}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2E4B5F72-035F-4731-9C89-C248B8965664}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2E4B5F72-035F-4731-9C89-C248B8965664}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E4B5F72-035F-4731-9C89-C248B8965664}.Integration|Any CPU.ActiveCfg = Integration|Any CPU
+		{2E4B5F72-035F-4731-9C89-C248B8965664}.Integration|Any CPU.Build.0 = Integration|Any CPU
 		{2E4B5F72-035F-4731-9C89-C248B8965664}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E4B5F72-035F-4731-9C89-C248B8965664}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection

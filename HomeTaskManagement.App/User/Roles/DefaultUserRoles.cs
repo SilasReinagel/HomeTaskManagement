@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace HomeTaskManagement.App.User
 {
@@ -13,6 +14,11 @@ namespace HomeTaskManagement.App.User
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public static implicit operator HashSet<UserRoles>(DefaultUserRoles roles)
+        {
+            return roles.ToHashSet();
         }
     }
 }

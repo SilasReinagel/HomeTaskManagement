@@ -13,7 +13,7 @@ namespace HomeTaskManagement.App.Common
 
         public static implicit operator string(EnvironmentVariable var)
         {
-            return Environment.GetEnvironmentVariable(var._name);
+            return Environment.GetEnvironmentVariable(var._name).Required($"Environment Variable {var._name}");
         }
     }
 }
