@@ -6,6 +6,6 @@ namespace HomeTaskManagement.App.Task.Instance
         Scheduled,
         Completed,
         Waived,
-        Incomplete
+        NotCompleted
     }
 }

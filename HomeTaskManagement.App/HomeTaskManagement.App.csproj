@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <Folder Include="Task.Instance\Fund\" />
-    <Folder Include="Task.Instance\Close\" />
   </ItemGroup>
 
 </Project>

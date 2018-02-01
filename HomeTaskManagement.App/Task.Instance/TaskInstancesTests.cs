@@ -60,5 +60,45 @@ namespace HomeTaskManagement.App.Task.Instance
             var active = _taskInstances.ActiveItemsDueBefore(_now.Plus(TimeSpan.FromDays(8)));
             Assert.AreEqual(1, active.Count());
         }
+
+        [TestMethod]
+        public void TaskInstances_MarkClosedTaskComplete_InvalidState()
+        {
+            _assignments.Assignments.Apply(new AssignTask(_tasks.DailyTask, _users.User1, _now));
+            _taskInstances.Apply(new ScheduleWorkItemsThrough(_now.Plus(TimeSpan.FromDays(1))));
+            var taskInstanceId = _taskInstances.ActiveItemsDueBefore(_now.Plus(TimeSpan.FromDays(2))).Single().Id;
+            _taskInstances.Apply(new MarkTaskComplete { Id = taskInstanceId, At = _now, ApproverUserId = _users.User2 });
+            
+            var resp = _taskInstances.Apply(new MarkTaskComplete { Id = taskInstanceId, At = _now, ApproverUserId = _users.User2 });
+
+            resp.AssertStatusIs(ResponseStatus.InvalidState);
+        }
+
+        [TestMethod]
+        public void TaskInstances_MarkOwnTaskComplete_InvalidState()
+        {
+            _assignments.Assignments.Apply(new AssignTask(_tasks.DailyTask, _users.User1, _now));
+            _taskInstances.Apply(new ScheduleWorkItemsThrough(_now.Plus(TimeSpan.FromDays(1))));
+
+            var taskInstanceId = _taskInstances.ActiveItemsDueBefore(_now.Plus(TimeSpan.FromDays(2))).Single().Id;
+            var resp = _taskInstances.Apply(new MarkTaskComplete { Id = taskInstanceId, At = _now, ApproverUserId = _users.User1 });
+
+            resp.AssertStatusIs(ResponseStatus.InvalidState);
+        }
+
+        [TestMethod]
+        public void TaskInstances_MarkActiveTaskComplete_InstanceCorrect()
+        {
+            _assignments.Assignments.Apply(new AssignTask(_tasks.DailyTask, _users.User1, _now));
+            _taskInstances.Apply(new ScheduleWorkItemsThrough(_now.Plus(TimeSpan.FromDays(1))));
+            
+            var taskInstanceId = _taskInstances.ActiveItemsDueBefore(_now.Plus(TimeSpan.FromDays(2))).Single().Id;
+            var resp = _taskInstances.Apply(new MarkTaskComplete { Id = taskInstanceId, At = _now, ApproverUserId = _users.User2 });
+
+            resp.AssertStatusIs(ResponseStatus.Succeeded);
+            Assert.AreEqual(TaskInstanceStatus.Completed, _taskInstances.Get(taskInstanceId).Status);
+            Assert.AreEqual(_users.User2, _taskInstances.Get(taskInstanceId).ApprovedByUserId);
+            Assert.AreEqual(_now, _taskInstances.Get(taskInstanceId).ApprovedAt);
+        }
     }
 }

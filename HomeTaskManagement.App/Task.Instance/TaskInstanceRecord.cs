@@ -18,7 +18,7 @@ namespace HomeTaskManagement.App.Task.Instance
         public string FundedByUserId { get; set; }
 
         public string ApprovedByUserId { get; set; }
-        public UnixUtcTime ApprovedOn { get; set; }
+        public UnixUtcTime ApprovedAt { get; set; }
 
         public TaskInstanceRecord()
         {
@@ -44,7 +44,7 @@ namespace HomeTaskManagement.App.Task.Instance
                 FundedByUserId = new DefaultUser(),
 
                 ApprovedByUserId = new DefaultUser(),
-                ApprovedOn = new UnixUtcTime(0),
+                ApprovedAt = new UnixUtcTime(0),
             };
         }
     }
