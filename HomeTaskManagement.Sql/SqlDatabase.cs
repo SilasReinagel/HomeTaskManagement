@@ -3,12 +3,12 @@ using HomeTaskManagement.App.Common;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
 
 namespace HomeTaskManagement.Sql
 {
     public sealed class SqlDatabase : IMonitoredComponent
     {
+        private readonly ReflectionValidation _validation = new ReflectionValidation();
         private readonly SqlConnection _conn;
 
         public string Name => "Sql Connection";
@@ -39,17 +39,26 @@ namespace HomeTaskManagement.Sql
 
         public T QuerySingle<T>(string sql, object parameters)
         {
-            return _conn.Query<T>(sql, parameters).Single();
+            return _conn.QuerySingle<T>(sql, parameters)
+                .Then(x => ThrowExceptionIfNotValid(sql, parameters, x));
         }
 
         public IEnumerable<T> Query<T>(string sql)
         {
-            return _conn.Query<T>(sql);
+            return _conn.Query<T>(sql)
+                .Then(x => ThrowExceptionIfNotValid(sql, new { }, x));
         }
 
         public void Execute(string sql, object parameters)
         {
             _conn.Execute(sql, parameters);
+        }
+
+        private T ThrowExceptionIfNotValid<T>(string sql, object parameters, T result)
+        {
+            _validation.Validate(result).IfInvalid(x => throw new ArgumentException(
+                $"Loaded record from SQL invalid: '{x.IssuesMessage}'. Query '{sql}'. Parameters {Json.ToString(parameters)}"));
+            return result;
         }
     }
 }
