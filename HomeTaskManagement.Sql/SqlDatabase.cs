@@ -13,6 +13,9 @@ namespace HomeTaskManagement.Sql
 
         public string Name => "Sql Connection";
 
+        public SqlDatabase()
+            : this(new EnvironmentVariable("HomeTaskManagementSqlConnection")) { }
+
         public SqlDatabase(string connectionString)
             : this(new SqlConnection(connectionString)) { }
 

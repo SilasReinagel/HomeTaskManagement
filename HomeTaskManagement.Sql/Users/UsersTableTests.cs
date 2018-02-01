@@ -17,8 +17,7 @@ namespace HomeTaskManagement.Sql.Users
         [TestInitialize]
         public void Init()
         {
-            var db = new SqlDatabase(new EnvironmentVariable("HomeTaskManagementSqlConnection"));
-            _users = new UsersTable(db);
+            _users = new UsersTable(new SqlDatabase());
         }
 
         [TestCleanup]

@@ -42,7 +42,7 @@ namespace HomeTaskManagement.Sql.Tasks
                         IF @@ROWCOUNT = 0
                         BEGIN
                             INSERT INTO HomeTask.Tasks (Id, Name, UnitsOfWork, Frequency, Importance)
-                            VALUES (@id, @name, @unitsOfWork, @importance)
+                            VALUES (@id, @name, @unitsOfWork, @frequency, @importance)
                         END";
 
             _db.Execute(sql, record);

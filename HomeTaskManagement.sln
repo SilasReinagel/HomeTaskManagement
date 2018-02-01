@@ -9,6 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeTaskManagement.App", "H
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeTaskManagement.Sql", "HomeTaskManagement.Sql\HomeTaskManagement.Sql.csproj", "{2E4B5F72-035F-4731-9C89-C248B8965664}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{E791C890-08E0-4252-AEDE-C4E875FC7F1C}"
+	ProjectSection(SolutionItems) = preProject
+		Scripts\CreateDatabase.sql = Scripts\CreateDatabase.sql
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
