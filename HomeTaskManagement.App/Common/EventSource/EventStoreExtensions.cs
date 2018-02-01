@@ -19,5 +19,10 @@ namespace HomeTaskManagement.App.Common
                 .Select(createEntity)
                 .Finalize();
         }
+
+        public static T Get<T>(this IEventStore eventStore, string id, Func<EventStream, T> createEntity)
+        {
+            return createEntity(new EventStream { Id = id, Events = eventStore.GetEvents<T>(id) });
+        }
     }
 }

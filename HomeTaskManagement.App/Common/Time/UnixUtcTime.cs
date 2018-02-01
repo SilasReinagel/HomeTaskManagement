@@ -6,6 +6,8 @@ namespace HomeTaskManagement.App.Common
     {
         public long Millis { get; }
 
+        public DayOfWeek DayOfWeek => DateTimeOffset.FromUnixTimeMilliseconds(Millis).DayOfWeek;
+
         public UnixUtcTime(long unixMillis)
         {
             Millis = unixMillis;

@@ -1,5 +1,4 @@
-﻿using HomeTaskManagement.App.Funding;
-using System;
+﻿using System;
 
 namespace HomeTaskManagement.App.Pledge
 {

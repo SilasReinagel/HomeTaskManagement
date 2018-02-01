@@ -2,7 +2,7 @@
 
 namespace HomeTaskManagement.App.User
 {
-    public sealed class SampleUsers
+    internal sealed class SampleUsers
     {
         public readonly string UnknownUser = new Id();
         public readonly string User1 = new Id();
@@ -12,8 +12,8 @@ namespace HomeTaskManagement.App.User
         public SampleUsers()
         {
             Users = new Users(new InMemoryEntityStore<UserRecord>());
-            Users.Create(new CreateUser(User1, "User1", "User1"));
-            Users.Create(new CreateUser(User2, "User2", "User2"));
+            Users.Apply(new CreateUser(User1, "User1", "User1"));
+            Users.Apply(new CreateUser(User2, "User2", "User2"));
         }
     }
 }

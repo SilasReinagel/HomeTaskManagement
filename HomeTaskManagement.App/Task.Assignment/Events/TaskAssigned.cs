@@ -1,6 +1,6 @@
 ﻿using HomeTaskManagement.App.Common;
 
-namespace HomeTaskManagement.App.Assignment
+namespace HomeTaskManagement.App.Task.Assignment
 {
     public sealed class TaskAssigned : IConvertToEvent
     {

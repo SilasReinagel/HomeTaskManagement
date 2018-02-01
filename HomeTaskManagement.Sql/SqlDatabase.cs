@@ -48,7 +48,5 @@ namespace HomeTaskManagement.Sql
         {
             _conn.Execute(sql, parameters);
         }
-
-
     }
 }

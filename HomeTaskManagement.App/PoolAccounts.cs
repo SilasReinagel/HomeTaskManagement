@@ -1,5 +1,5 @@
 ﻿
-namespace HomeTaskManagement.App.Funding
+namespace HomeTaskManagement.App
 {
     public static class PoolAccounts
     {

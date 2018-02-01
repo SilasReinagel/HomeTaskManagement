@@ -26,7 +26,7 @@ namespace HomeTaskManagement.App.Task
         [TestMethod]
         public void TaskRates_ForCritical_IsCorrect()
         {
-            var shopping = new TaskRecord { Frequency = TaskFrequency.Weekly, Name = "Shopping", UnitsOfWork = 2, Importance = Importance.Critical };
+            var shopping = new TaskRecord { Frequency = TaskFrequency.Weekly, Name = "Shopping", UnitsOfWork = 2, Importance = TaskImportance.Critical };
 
             var rate = _rates.GetInstanceRate(shopping);
 
@@ -36,7 +36,7 @@ namespace HomeTaskManagement.App.Task
         [TestMethod]
         public void TaskRates_ForDaily_IsCorrect()
         {
-            var fridge = new TaskRecord { Frequency = TaskFrequency.Daily, Name = "Fridge", UnitsOfWork = 3, Importance = Importance.Normal };
+            var fridge = new TaskRecord { Frequency = TaskFrequency.Daily, Name = "Fridge", UnitsOfWork = 3, Importance = TaskImportance.Normal };
 
             var rate = _rates.GetInstanceRate(fridge);
 

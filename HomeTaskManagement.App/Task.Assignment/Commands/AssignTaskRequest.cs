@@ -1,14 +1,14 @@
 ﻿using HomeTaskManagement.App.Common;
 
-namespace HomeTaskManagement.App.Assignment
+namespace HomeTaskManagement.App.Task.Assignment
 {
-    public sealed class AssignTaskRequest : IConvertToEvent
+    public sealed class AssignTask : IConvertToEvent
     {
         public string TaskId { get; }
         public string UserId { get; }
         public UnixUtcTime StartsAt { get; }
 
-        public AssignTaskRequest(string taskId, string userId, UnixUtcTime assignmentStart)
+        public AssignTask(string taskId, string userId, UnixUtcTime assignmentStart)
         {
             TaskId = taskId;
             UserId = userId;

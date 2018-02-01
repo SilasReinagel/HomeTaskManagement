@@ -2,7 +2,7 @@
 
 namespace HomeTaskManagement.App.Task
 {
-    public class TaskRates
+    public sealed class TaskRates
     {
         private readonly decimal _perUnitRate;
         private readonly decimal _criticalFactor;
@@ -19,7 +19,7 @@ namespace HomeTaskManagement.App.Task
         public int GetInstanceRate(TaskRecord task)
         {
             var frequencyDivisor = task.Frequency == TaskFrequency.Weekly ? 1 : 7;
-            var criticalityFactor = task.Importance == Importance.Critical ? _criticalFactor : 1;
+            var criticalityFactor = task.Importance == TaskImportance.Critical ? _criticalFactor : 1;
             var rawRate = (_perUnitRate * task.UnitsOfWork * criticalityFactor) / frequencyDivisor;
             return Convert.ToInt32(Math.Round(rawRate, MidpointRounding.AwayFromZero));
         }

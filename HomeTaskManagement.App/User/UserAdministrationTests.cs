@@ -50,7 +50,7 @@ namespace HomeTaskManagement.App.User
 
         private Response CreateUser(params UserRoles[] roles)
         {
-            return _users.Create(new CreateUser(UserId, "username", "name"));
+            return _users.Apply(new CreateUser(UserId, "username", "name"));
         }
     }
 }

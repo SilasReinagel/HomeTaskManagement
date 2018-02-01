@@ -5,7 +5,7 @@ using System.Linq;
 namespace HomeTaskManagement.App.Task
 {
     [TestClass]
-    public class TaskAdministrationTests
+    public class TasksTests
     {
         private const string TaskName = "taskname";
 
@@ -33,7 +33,7 @@ namespace HomeTaskManagement.App.Task
         {
             CreateTask();
 
-            var resp = _task.Delete(new DeleteTask(_taskRecords.GetAll().First().Id));
+            var resp = _task.Apply(new DeleteTask(_taskRecords.GetAll().First().Id));
 
             Assert.IsTrue(resp.Succeeded);
             Assert.IsFalse(_taskRecords.Contains(x => x.Name.Equals(TaskName)));
@@ -41,7 +41,7 @@ namespace HomeTaskManagement.App.Task
 
         private Response CreateTask()
         {
-            return _task.Create(new CreateTask("id", TaskName, 5, Importance.Normal, TaskFrequency.Daily));
+            return _task.Apply(new CreateTask("id", TaskName, 5, TaskImportance.Normal, TaskFrequency.Daily));
         }
     }
 }

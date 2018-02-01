@@ -6,10 +6,10 @@ namespace HomeTaskManagement.App.Task
         public string Id { get; set; }
         public string Name { get; set; }
         public int UnitsOfWork { get; set; }
-        public Importance Importance { get; set; }
+        public TaskImportance Importance { get; set; }
         public TaskFrequency Frequency { get; set; }
 
-        public CreateTask(string id, string name, int unitsOfWork, Importance importance, TaskFrequency frequency)
+        public CreateTask(string id, string name, int unitsOfWork, TaskImportance importance, TaskFrequency frequency)
         {
             Id = id;
             Name = name;

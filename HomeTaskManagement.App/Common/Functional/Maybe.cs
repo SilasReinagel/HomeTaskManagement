@@ -19,5 +19,10 @@ namespace HomeTaskManagement.App.Common
         {
             return new Maybe<T>(false, obj);
         }
+
+        public static implicit operator bool(Maybe<T> maybe)
+        {
+            return maybe.IsPresent;
+        }
     }
 }

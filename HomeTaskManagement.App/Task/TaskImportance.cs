@@ -1,7 +1,7 @@
 ﻿
 namespace HomeTaskManagement.App.Task
 {
-    public enum Importance
+    public enum TaskImportance
     {
         Normal,
         Critical
