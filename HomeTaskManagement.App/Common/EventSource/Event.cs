@@ -8,16 +8,16 @@ namespace HomeTaskManagement.App.Common
         public string Name { get; set; }
         public int Version { get; set; }
         public string JsonPayload { get; set; }
-        public long OccurredOn { get; set; }
+        public UnixUtcTime OccurredAt { get; set; }
 
-        public Event(string entityType, string entityId, string name, int version, string jsonPayload, long occurredOn)
+        public Event(string entityType, string entityId, string name, int version, string jsonPayload, UnixUtcTime occurredAt)
         {
             EntityType = entityType;
             EntityId = entityId;
             Name = name;
             Version = version;
             JsonPayload = jsonPayload;
-            OccurredOn = occurredOn;
+            OccurredAt = occurredAt;
         }
 
         public T PayloadAs<T>()

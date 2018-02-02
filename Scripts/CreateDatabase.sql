@@ -31,3 +31,23 @@ CREATE TABLE HomeTask.Tasks (
 )
 GO
 
+
+---------- Create EventStore Table ----------
+
+IF (EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'HomeTask'  AND  TABLE_NAME = 'Events'))
+	DROP TABLE HomeTask.Events
+
+CREATE TABLE HomeTask.Events (
+	EntityType varchar(255) NOT NULL,
+	EntityId varchar(255) NOT NULL,
+	Name varchar(255) NOT NULL,
+	Version int NOT NULL,
+	JsonPayload varchar(MAX) NOT NULL,
+	OccurredAt datetime2 NOT NULL
+)
+GO
+
+CREATE INDEX idx_EntityType ON HomeTask.Events (EntityType)
+CREATE INDEX idx_EntityType_EntityId ON HomeTask.Events (EntityType, EntityId)
+CREATE INDEX idx_EntityType_EntityId_OccurredAt ON HomeTask.Events (EntityType, EntityId, OccurredAt)
+GO
