@@ -31,6 +31,29 @@ CREATE TABLE HomeTask.Tasks (
 )
 GO
 
+---------- Create Task Instances Table ----------
+
+IF (EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'HomeTask'  AND  TABLE_NAME = 'TaskInstances'))
+	DROP TABLE HomeTask.TaskInstances
+
+CREATE TABLE HomeTask.TaskInstances (
+	Id varchar(255) NOT NULL PRIMARY KEY,
+    Status varchar(255) NOT NULL,	
+    TaskId varchar(255) NOT NULL,
+	FOREIGN KEY (TaskId) REFERENCES HomeTask.Tasks(Id),
+    UserId varchar(255) NOT NULL,
+	FOREIGN KEY (UserId) REFERENCES HomeTask.Users(Id),
+    Due datetime2 NOT NULL,
+    Price int NOT NULL,
+	IsFunded bit NOT NULL,
+    FundedOn datetime2 NOT NULL,
+	FundedByUserId varchar(255) NOT NULL,
+	FOREIGN KEY (FundedByUserId) REFERENCES HomeTask.Users(Id),
+    ApprovedAt datetime2 NOT NULL,
+	ApprovedByUserId varchar(255) NOT NULL,
+	FOREIGN KEY (ApprovedByUserId) REFERENCES HomeTask.Users(Id)
+)
+GO
 
 ---------- Create EventStore Table ----------
 
@@ -45,7 +68,6 @@ CREATE TABLE HomeTask.Events (
 	JsonPayload varchar(MAX) NOT NULL,
 	OccurredAt datetime2 NOT NULL
 )
-GO
 
 CREATE INDEX idx_EntityType ON HomeTask.Events (EntityType)
 CREATE INDEX idx_EntityType_EntityId ON HomeTask.Events (EntityType, EntityId)
