@@ -1,5 +1,7 @@
-﻿using HomeTaskManagement.App.Accounting;
+﻿using HomeTaskManagement.App;
+using HomeTaskManagement.App.Accounting;
 using HomeTaskManagement.App.Common;
+using HomeTaskManagement.App.Pledge;
 using HomeTaskManagement.App.Task;
 using HomeTaskManagement.App.User;
 using HomeTaskManagement.Sql;
@@ -35,12 +37,20 @@ namespace HomeTaskManagement.WebAPI
                 services.AddSingleton(sqlDb);
                 services.AddSingleton(new MiniAuth(new EnvironmentVariable("HomeTaskManagementSecret")));
                 services.AddSingleton(new AppHealth(TimeSpan.FromMinutes(15), sqlDb));
-                services.AddSingleton<IEventStore>(x => new InMemoryEventStore());
                 services.AddSingleton<IEntityStore<UserRecord>>(x => new InMemoryEntityStore<UserRecord>());
                 services.AddSingleton<IEntityStore<TaskRecord>>(x => new InMemoryEntityStore<TaskRecord>());
-                services.AddScoped(x => new Accounts(x.GetService<IEventStore>()));
-                services.AddScoped(x => new Users(x.GetService<IEntityStore<UserRecord>>()));
                 services.AddScoped(x => new Tasks(x.GetService<IEntityStore<TaskRecord>>()));
+
+                var eventStore = new InMemoryEventStore();
+                services.AddSingleton<IEventStore>(eventStore);
+                var users = new Users(new InMemoryEntityStore<UserRecord>());
+                services.AddSingleton(users);
+                var accounts = new Accounts(eventStore);
+                services.AddSingleton(accounts);
+                var pledges = new Pledges(eventStore, users, accounts, new PledgeFundingSettings());
+                services.AddSingleton(pledges);
+
+                new AppRecurringTasks(new FundPledgesDaily(pledges)).Start();
             }
             catch (Exception e)
             {

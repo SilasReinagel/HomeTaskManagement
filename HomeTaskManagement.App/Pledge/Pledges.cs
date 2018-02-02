@@ -21,22 +21,22 @@ namespace HomeTaskManagement.App.Pledge
             _settings = settings;
         }
 
-        public Response Set(SetPledge req)
+        public UserPledge Get(string userId)
+        {
+            return new UserPledge(userId, _eventStore.GetEvents<UserPledge>(userId));
+        }
+
+        public Response Apply(SetPledge req)
         {
             return _users.IfExists(req.UserId)
                 .And(req.StartsAt.IsNotPast())
                 .Then(() => _eventStore.Commit(req.ToEvent()));
         }
 
-        public UserPledge Get(string userId)
-        {
-            return new UserPledge(userId, _eventStore.GetEvents<UserPledge>(userId));
-        }
-
-        public Response Fund(FundPledges fundPledges)
+        public Response Apply(FundPledges req)
         {
             return GetAll()
-                .Select(x => Fund(x, fundPledges.Through))
+                .Select(x => Fund(x, req.Through))
                 .Combine();
         }
 

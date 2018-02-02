@@ -45,7 +45,7 @@ namespace HomeTaskManagement.App.Pledge
         [TestMethod]
         public void Pledges_SetUserPledgeForUnknownUser_UnknownEntity()
         {
-            var resp = _pledges.Set(new SetPledge(_sampleUsers.UnknownUser, PledgeAmount, _now));
+            var resp = _pledges.Apply(new SetPledge(_sampleUsers.UnknownUser, PledgeAmount, _now));
 
             resp.AssertStatusIs(ResponseStatus.UnknownEntity);
         }
@@ -53,7 +53,7 @@ namespace HomeTaskManagement.App.Pledge
         [TestMethod]
         public void Pledges_SetUserPledgeForTimeBeforeNow_InvalidState()
         {
-            var resp = _pledges.Set(new SetPledge(User1, PledgeAmount, _now.Minus(TimeSpan.FromHours(1))));
+            var resp = _pledges.Apply(new SetPledge(User1, PledgeAmount, _now.Minus(TimeSpan.FromHours(1))));
 
             resp.AssertStatusIs(ResponseStatus.InvalidState);
         }
@@ -61,7 +61,7 @@ namespace HomeTaskManagement.App.Pledge
         [TestMethod]
         public void Pledges_SetUserPledge_PledgeCorrect()
         {
-            var resp = _pledges.Set(new SetPledge(User1, PledgeAmount, _now));
+            var resp = _pledges.Apply(new SetPledge(User1, PledgeAmount, _now));
 
             var pledge = _pledges.Get(_sampleUsers.User1);
             resp.AssertStatusIs(ResponseStatus.Succeeded);
@@ -72,9 +72,9 @@ namespace HomeTaskManagement.App.Pledge
         [TestMethod]
         public void Pledges_FundPledges_PledgesFunded()
         {
-            _pledges.Set(new SetPledge(User1, 4, _now));
+            _pledges.Apply(new SetPledge(User1, 4, _now));
 
-            var resp = _pledges.Fund(new FundPledges(_now.Plus(_settings.Frequency)));
+            var resp = _pledges.Apply(new FundPledges(_now.Plus(_settings.Frequency)));
 
             resp.AssertStatusIs(ResponseStatus.Succeeded);
             Assert.AreEqual(_now.Plus(_settings.Frequency), _pledges.Get(User1).FundedThrough);
@@ -84,10 +84,10 @@ namespace HomeTaskManagement.App.Pledge
         [TestMethod]
         public void Pledges_FundPledgesCalledAgain_PledgeFundingStaysTheSame()
         {
-            _pledges.Set(new SetPledge(_sampleUsers.User1, 4, _now));
+            _pledges.Apply(new SetPledge(_sampleUsers.User1, 4, _now));
 
-            _pledges.Fund(new FundPledges(_now.Plus(_settings.Frequency)));
-            var resp = _pledges.Fund(new FundPledges(_now.Plus(_settings.Frequency)));
+            _pledges.Apply(new FundPledges(_now.Plus(_settings.Frequency)));
+            var resp = _pledges.Apply(new FundPledges(_now.Plus(_settings.Frequency)));
 
             resp.AssertStatusIs(ResponseStatus.Succeeded);
             Assert.AreEqual(_now.Plus(_settings.Frequency), _pledges.Get(User1).FundedThrough);
@@ -98,12 +98,12 @@ namespace HomeTaskManagement.App.Pledge
         public void Pledges_FundPledgesAtNonIntervalTimes_PledgeFundingExtendedFullInterval()
         {
             var firstFundingTime = _now;
-            _pledges.Set(new SetPledge(User1, PledgeAmount, firstFundingTime));
-            _pledges.Fund(new FundPledges(firstFundingTime.Plus(_settings.Frequency)));
+            _pledges.Apply(new SetPledge(User1, PledgeAmount, firstFundingTime));
+            _pledges.Apply(new FundPledges(firstFundingTime.Plus(_settings.Frequency)));
             Clock.Advance(TimeSpan.FromHours(1));
 
             var secondFundingTime = Clock.UnixUtcNow;
-            var resp = _pledges.Fund(new FundPledges(secondFundingTime.Plus(_settings.Frequency)));
+            var resp = _pledges.Apply(new FundPledges(secondFundingTime.Plus(_settings.Frequency)));
 
             resp.AssertStatusIs(ResponseStatus.Succeeded);
             Assert.AreEqual(firstFundingTime.Plus(_settings.Frequency * 2), _pledges.Get(User1).FundedThrough);
@@ -113,9 +113,9 @@ namespace HomeTaskManagement.App.Pledge
         [TestMethod]
         public void Pledges_FundPledgesThroughDistantFutureTime_PledgesFunded()
         {
-            _pledges.Set(new SetPledge(User1, PledgeAmount, _now));
+            _pledges.Apply(new SetPledge(User1, PledgeAmount, _now));
 
-            var resp = _pledges.Fund(new FundPledges(_now.Plus(_settings.Frequency * 3)));
+            var resp = _pledges.Apply(new FundPledges(_now.Plus(_settings.Frequency * 3)));
 
             resp.AssertStatusIs(ResponseStatus.Succeeded);
             Assert.AreEqual(_now.Plus(_settings.Frequency * 3), _pledges.Get(User1).FundedThrough);

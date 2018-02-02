@@ -28,6 +28,11 @@ namespace HomeTaskManagement.App.Common
             return new UnixUtcTime(Millis + ToLong(timeSpan));
         }
 
+        public UnixUtcTime Minus(UnixUtcTime time)
+        {
+            return new UnixUtcTime(Millis - time.Millis);
+        }
+
         public UnixUtcTime Minus(TimeSpan timeSpan)
         {
             return new UnixUtcTime(Millis - ToLong(timeSpan));

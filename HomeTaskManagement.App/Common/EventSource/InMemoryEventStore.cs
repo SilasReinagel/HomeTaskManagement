@@ -21,7 +21,7 @@ namespace HomeTaskManagement.App.Common
         {
             var keyPrefix = $"{typeof(T).Name}-";
             return _events.Where(x => x.Key.StartsWith(keyPrefix))
-                .Select(x => new EventStream { Id = x.Key.Without(keyPrefix), Events = x.Value.OrderBy(e => e.OccurredOn) });
+                .Select(x => new EventStream { Id = x.Key.Without(keyPrefix), Events = x.Value.OrderBy(e => e.OccurredAt) });
         }
 
         private List<Event> Read(string type, string id)

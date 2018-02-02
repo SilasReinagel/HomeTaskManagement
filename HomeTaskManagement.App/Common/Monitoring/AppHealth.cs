@@ -20,7 +20,7 @@ namespace HomeTaskManagement.App.Common
         public AppHealth(TimeSpan statusInterval, IEnumerable<IMonitoredComponent> components)
         {
             _components = components;
-            _statusTimer = new Timer(x => UpdateComponentStatuses(), null, TimeSpan.Zero, statusInterval);
+            _statusTimer = new Timer(x => UpdateComponentStatuses(), new { }, TimeSpan.Zero, statusInterval);
         }
 
         private void UpdateComponentStatuses()
