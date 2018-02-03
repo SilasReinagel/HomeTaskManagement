@@ -17,6 +17,10 @@ CREATE TABLE HomeTask.Users (
 )
 GO
 
+INSERT INTO HomeTask.Users (Id, Name, Username, Roles)
+VALUES ('00000000-0000-0000-0000-000000000000', 'Nobody', 'Nobody', 'Basic')
+GO
+
 ---------- Create Tasks Table ----------
 
 IF (EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'HomeTask'  AND  TABLE_NAME = 'Tasks'))

@@ -26,7 +26,7 @@ namespace HomeTaskManagement.App.Task.Assignment
             return _assignedUsers.At(time);
         }
 
-        public IEnumerable<ProposedAssignedTaskInstance> FutureInstancesThrough(UnixUtcTime time)
+        public IEnumerable<ProposedTaskInstance> FutureInstancesThrough(UnixUtcTime time)
         {
             var from = _task.Frequency == TaskFrequency.Weekly
                 ? Clock.UnixUtcNow.Next(_settings.WeekEndDeadline)
@@ -36,7 +36,7 @@ namespace HomeTaskManagement.App.Task.Assignment
                 .Every(TimeSpan.FromDays((int)_task.Frequency))
                 .Where(x => x.IsAfter(Clock.UnixUtcNow))
                 .Until(time)
-                .Select(due => new ProposedAssignedTaskInstance
+                .Select(due => new ProposedTaskInstance
                 {
                     TaskId = _task.Id,
                     UserId = _assignedUsers.At(time),

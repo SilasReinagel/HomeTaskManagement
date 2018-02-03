@@ -74,7 +74,7 @@ namespace HomeTaskManagement.App.Task.Instance
             return Response.Success;
         }
 
-        private Response Schedule(ProposedAssignedTaskInstance task)
+        private Response Schedule(ProposedTaskInstance task)
         {
             _store.Put(task.Id, TaskInstanceRecord.From(task));
             return Response.Success;

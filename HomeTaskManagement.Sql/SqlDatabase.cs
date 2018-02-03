@@ -2,7 +2,9 @@
 using HomeTaskManagement.App.Common;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 
 namespace HomeTaskManagement.Sql
 {
@@ -12,6 +14,13 @@ namespace HomeTaskManagement.Sql
         private readonly SqlConnection _conn;
 
         public string Name => "Sql Connection";
+
+        static SqlDatabase()
+        {
+            SqlMapper.AddTypeHandler(new UnixUtcTimeTypeHandler());
+            SqlMapper.AddTypeMap(typeof(UnixUtcTime), DbType.DateTime2);
+            SqlMapper.AddTypeMap(typeof(DateTime), DbType.DateTime2);
+        }
 
         public SqlDatabase()
             : this(new EnvironmentVariable("HomeTaskManagementSqlConnection")) { }
@@ -46,7 +55,7 @@ namespace HomeTaskManagement.Sql
         public IEnumerable<T> Query<T>(string sql)
         {
             return _conn.Query<T>(sql)
-                .Then(x => ThrowExceptionIfNotValid(sql, new { }, x));
+                .Select(item => ThrowExceptionIfNotValid(sql, new { }, item));
         }
 
         public void Execute(string sql, object parameters)

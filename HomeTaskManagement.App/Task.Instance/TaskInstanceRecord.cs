@@ -11,7 +11,7 @@ namespace HomeTaskManagement.App.Task.Instance
         public string TaskId { get; set; }
         public string UserId { get; set; }
         public UnixUtcTime Due { get; set; }
-        public decimal Price { get; set; }
+        public int Price { get; set; }
 
         public bool IsFunded { get; set; }
         public UnixUtcTime FundedOn { get; set; }
@@ -24,12 +24,12 @@ namespace HomeTaskManagement.App.Task.Instance
         {
         }
 
-        public static TaskInstanceRecord From(ProposedAssignedTaskInstance proposed)
+        public static TaskInstanceRecord From(ProposedTaskInstance proposed)
         {
             return New(proposed.TaskId, proposed.UserId, proposed.Due, proposed.Price);
         }
 
-        public static TaskInstanceRecord New(string taskId, string userId, UnixUtcTime due, decimal price)
+        public static TaskInstanceRecord New(string taskId, string userId, UnixUtcTime due, int price)
         {
             return new TaskInstanceRecord
             {
