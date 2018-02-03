@@ -3,6 +3,8 @@ using HomeTaskManagement.App.Accounting;
 using HomeTaskManagement.App.Common;
 using HomeTaskManagement.App.Pledge;
 using HomeTaskManagement.App.Task;
+using HomeTaskManagement.App.Task.Assignment;
+using HomeTaskManagement.App.Task.Instance;
 using HomeTaskManagement.App.User;
 using HomeTaskManagement.Sql;
 using HomeTaskManagement.WebAPI.Auth;
@@ -37,20 +39,25 @@ namespace HomeTaskManagement.WebAPI
                 services.AddSingleton(sqlDb);
                 services.AddSingleton(new MiniAuth(new EnvironmentVariable("HomeTaskManagementSecret")));
                 services.AddSingleton(new AppHealth(TimeSpan.FromMinutes(15), sqlDb));
-                services.AddSingleton<IEntityStore<UserRecord>>(x => new InMemoryEntityStore<UserRecord>());
-                services.AddSingleton<IEntityStore<TaskRecord>>(x => new InMemoryEntityStore<TaskRecord>());
-                services.AddScoped(x => new Tasks(x.GetService<IEntityStore<TaskRecord>>()));
 
+                var messages = new Messages();
+                services.AddSingleton(messages);
                 var eventStore = new InMemoryEventStore();
                 services.AddSingleton<IEventStore>(eventStore);
                 var users = new Users(new InMemoryEntityStore<UserRecord>());
                 services.AddSingleton(users);
+                var tasks = new Tasks(new InMemoryEntityStore<TaskRecord>());
+                services.AddSingleton(tasks);
                 var accounts = new Accounts(eventStore);
                 services.AddSingleton(accounts);
                 var pledges = new Pledges(eventStore, users, accounts, new PledgeFundingSettings());
                 services.AddSingleton(pledges);
+                var assignments = new TaskAssignments(eventStore, tasks, users, new AssignmentSettings());
+                services.AddSingleton(assignments);
+                var taskInstances = new TaskInstances(new InMemoryTaskInstanceStore(), assignments, messages);
+                services.AddSingleton(taskInstances);
 
-                new AppRecurringTasks(new FundPledgesDaily(pledges)).Start();
+                new AppRecurringTasks(new FundPledgesDaily(pledges), new MarkNotCompletedTasksDaily(taskInstances)).Start();
             }
             catch (Exception e)
             {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using HomeTaskManagement.App.Common;
 using HomeTaskManagement.App.Task.Assignment;
@@ -17,6 +18,7 @@ namespace HomeTaskManagement.App.Task.Instance
             _assignments = assignments;
             _messages = messages;
         }
+
 
         public TaskInstanceRecord Get(string id)
         {
@@ -48,7 +50,16 @@ namespace HomeTaskManagement.App.Task.Instance
 
             return UpdateTask(task, req);
         }
-        
+
+        public Response Apply(MarkTaskNotComplete req)
+        {
+            var task = Get(req.Id);
+            if (task.Status != TaskInstanceStatus.Scheduled)
+                return Response.Errored(ResponseStatus.InvalidState, $"Task has already been closed.");
+
+            return UpdateTask(task, req);
+        }
+
         public Response Apply(WaiveTask req)
         {
             var task = Get(req.Id);

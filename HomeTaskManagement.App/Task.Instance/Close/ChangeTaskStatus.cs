@@ -8,6 +8,6 @@ namespace HomeTaskManagement.App.Task.Instance
         public string ApproverUserId { get; set; }
         public UnixUtcTime At { get; set; }
 
-        public abstract TaskInstanceStatus NewStatus { get; set; }        
+        public abstract TaskInstanceStatus NewStatus { get; protected set; }        
     }
 }

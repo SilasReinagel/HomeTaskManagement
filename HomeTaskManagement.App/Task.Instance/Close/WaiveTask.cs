@@ -3,6 +3,6 @@ namespace HomeTaskManagement.App.Task.Instance
 {
     public sealed class WaiveTask : ChangeTaskStatus
     {
-        public override TaskInstanceStatus NewStatus { get; set; } = TaskInstanceStatus.Waived;
+        public override TaskInstanceStatus NewStatus { get; protected set; } = TaskInstanceStatus.Waived;
     }
 }
