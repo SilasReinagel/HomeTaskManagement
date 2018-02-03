@@ -45,7 +45,15 @@ namespace HomeTaskManagement.Sql.Tasks
                             VALUES (@id, @name, @unitsOfWork, @frequency, @importance)
                         END";
 
-            _db.Execute(sql, record);
+            _db.Execute(sql, 
+                new
+                {
+                    name = record.Name,
+                    id = record.Id,
+                    unitsOfWork = record.UnitsOfWork,
+                    frequency = record.Frequency.ToString(),
+                    importance = record.Importance.ToString()
+                });
         }
 
         public void Remove(string id)

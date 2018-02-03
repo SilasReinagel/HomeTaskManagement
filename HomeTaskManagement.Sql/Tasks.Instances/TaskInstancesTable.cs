@@ -57,7 +57,7 @@ namespace HomeTaskManagement.Sql.Tasks.Instances
             _db.Execute(sql, new
                 {
                     id = record.Id,
-                    status = record.Status,
+                    status = record.Status.ToString(),
                     taskId = record.TaskId,
                     userId = record.UserId,
                     due = UnixUtcTime.ToDateTime(record.Due),
