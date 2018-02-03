@@ -1,11 +1,8 @@
-﻿using HomeTaskManagement.App.Common;
-
+﻿
 namespace HomeTaskManagement.App.Task.Instance
 {
-    public sealed class MarkTaskComplete
+    public sealed class MarkTaskComplete : ChangeTaskStatus
     {
-        public string Id { get; set; }
-        public string ApproverUserId { get; set; }
-        public UnixUtcTime At { get; set; }
+        public override TaskInstanceStatus NewStatus { get; set; } = TaskInstanceStatus.Completed;
     }
 }

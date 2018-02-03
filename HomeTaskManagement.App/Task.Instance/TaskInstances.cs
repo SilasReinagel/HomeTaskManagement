@@ -9,13 +9,13 @@ namespace HomeTaskManagement.App.Task.Instance
     {
         private readonly ITaskInstanceStore _store;
         private readonly TaskAssignments _assignments;
-        private readonly WorkItemSchedulingSettings _settings;
+        private readonly Messages _messages;
 
-        public TaskInstances(ITaskInstanceStore store, TaskAssignments assignments, WorkItemSchedulingSettings settings)
+        public TaskInstances(ITaskInstanceStore store, TaskAssignments assignments, Messages messages)
         {
             _store = store;
             _assignments = assignments;
-            _settings = settings;
+            _messages = messages;
         }
 
         public TaskInstanceRecord Get(string id)
@@ -46,10 +46,31 @@ namespace HomeTaskManagement.App.Task.Instance
             if (task.UserId == req.ApproverUserId)
                 return Response.Errored(ResponseStatus.InvalidState, $"Task approver must be different than assignee.");
 
-            task.Status = TaskInstanceStatus.Completed;
+            return UpdateTask(task, req);
+        }
+        
+        public Response Apply(WaiveTask req)
+        {
+            var task = Get(req.Id);
+            if (task.Status == TaskInstanceStatus.Waived || task.Status == TaskInstanceStatus.Completed)
+                return Response.Success;            
+            if (task.UserId == req.ApproverUserId)
+                return Response.Errored(ResponseStatus.InvalidState, $"Task cannot be waived by the assignee.");
+
+            return UpdateTask(task, req);
+        }
+
+        private Response UpdateTask(TaskInstanceRecord task, ChangeTaskStatus req)
+        {
+            var changeMsg = new TaskInstanceStatusChanged { Id = task.Id, PreviousStatus = task.Status, CurrentStatus = req.NewStatus };
+
+            task.Status = req.NewStatus;
             task.ApprovedByUserId = req.ApproverUserId;
             task.ApprovedAt = req.At;
             _store.Put(req.Id, task);
+
+            _messages.Publish(changeMsg);
+
             return Response.Success;
         }
 

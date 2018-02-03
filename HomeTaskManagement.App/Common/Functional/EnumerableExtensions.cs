@@ -27,5 +27,10 @@ namespace HomeTaskManagement.App.Common
         {
             return items.ToList();
         }
+
+        public static IEnumerable<T> Copy<T>(this IEnumerable<T> items)
+        {
+            return items.ToList();
+        }
     }
 }
