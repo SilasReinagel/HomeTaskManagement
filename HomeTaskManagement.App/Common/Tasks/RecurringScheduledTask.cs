@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace HomeTaskManagement.App.Common
 {
-    public abstract class RecurringScheduledTask
+    public abstract class RecurringScheduledTask : IDisposable
     {
         private readonly Timer _timer;
         private readonly UnixUtcTime _firstExecution;
@@ -19,6 +19,11 @@ namespace HomeTaskManagement.App.Common
         public void Start()
         {
             _timer.Change(TimeSpan.FromMilliseconds(_firstExecution.Minus(Clock.UnixUtcNow)), _interval);
+        }
+
+        public void Dispose()
+        {
+            _timer.Dispose();
         }
     }
 }
