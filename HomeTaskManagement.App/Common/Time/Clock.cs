@@ -15,7 +15,7 @@ namespace HomeTaskManagement.App.Common
         {
             _utcClock = () => DateTimeOffset.UtcNow;
         }
-
+        
         public static void Advance(TimeSpan duration)
         {
             if (!_isFrozen)

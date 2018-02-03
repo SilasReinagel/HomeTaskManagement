@@ -1,7 +1,8 @@
 ﻿using HomeTaskManagement.App.Common;
+using HomeTaskManagement.App.Pledge;
 using System;
 
-namespace HomeTaskManagement.App.Pledge
+namespace HomeTaskManagement.App.ServiceJobs
 {
     public sealed class FundPledgesDaily : RecurringScheduledTask
     {

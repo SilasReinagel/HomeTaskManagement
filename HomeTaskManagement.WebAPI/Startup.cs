@@ -1,7 +1,7 @@
-﻿using HomeTaskManagement.App;
-using HomeTaskManagement.App.Accounting;
+﻿using HomeTaskManagement.App.Accounting;
 using HomeTaskManagement.App.Common;
 using HomeTaskManagement.App.Pledge;
+using HomeTaskManagement.App.ServiceJobs;
 using HomeTaskManagement.App.Task;
 using HomeTaskManagement.App.Task.Assignment;
 using HomeTaskManagement.App.Task.Instance;
@@ -57,7 +57,11 @@ namespace HomeTaskManagement.WebAPI
                 var taskInstances = new TaskInstances(new InMemoryTaskInstanceStore(), assignments, messages);
                 services.AddSingleton(taskInstances);
 
-                new AppRecurringTasks(new FundPledgesDaily(pledges), new MarkNotCompletedTasksDaily(taskInstances)).Start();
+                new AppRecurringTasks(
+                    new FundPledgesDaily(pledges), 
+                    new MarkNotCompletedTasksDaily(taskInstances),
+                    new ScheduleTasksDaily(taskInstances))
+                        .Start();
             }
             catch (Exception e)
             {

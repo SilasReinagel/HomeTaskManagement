@@ -1,7 +1,7 @@
 ﻿using HomeTaskManagement.App.Common;
 using System.Collections.Generic;
 
-namespace HomeTaskManagement.App
+namespace HomeTaskManagement.App.ServiceJobs
 {
     public sealed class AppRecurringTasks
     {
