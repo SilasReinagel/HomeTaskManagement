@@ -62,6 +62,9 @@ namespace HomeTaskManagement.WebAPI
                     new MarkNotCompletedTasksDaily(taskInstances),
                     new ScheduleTasksDaily(taskInstances))
                         .Start();
+
+                new HandleTaskInstanceCompletionPayments(taskInstances, tasks, accounts, messages)
+                    .Start();
             }
             catch (Exception e)
             {
