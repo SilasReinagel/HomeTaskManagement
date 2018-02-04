@@ -28,19 +28,22 @@ namespace HomeTaskManagement.App.Task.Assignment
 
         public IEnumerable<ProposedTaskInstance> FutureInstancesThrough(UnixUtcTime time)
         {
+            var taskDuration = TimeSpan.FromDays((int)_task.Frequency);
             var from = _task.Frequency == TaskFrequency.Weekly
                 ? Clock.UnixUtcNow.Next(_settings.WeekEndDeadline)
                 : Clock.UnixUtcNow;
             return from
                 .StartOfDay()
-                .Every(TimeSpan.FromDays((int)_task.Frequency))
+                .Every(taskDuration)
                 .Where(x => x.IsAfter(Clock.UnixUtcNow))
                 .Until(time)
                 .Select(due => new ProposedTaskInstance
                 {
+                    TaskDescription = $"{_task.Name}",
                     TaskId = _task.Id,
                     UserId = _assignedUsers.At(time),
                     Price = _rates.GetInstanceRate(_task),
+                    Start = due.Plus(_settings.TaskInstanceDeadlineUtcOffset).Minus(taskDuration),
                     Due = due.Plus(_settings.TaskInstanceDeadlineUtcOffset)
                 });
         }

@@ -19,7 +19,6 @@ namespace HomeTaskManagement.App.Task.Instance
             _messages = messages;
         }
 
-
         public TaskInstanceRecord Get(string id)
         {
             return _store.Get(id);
@@ -76,8 +75,8 @@ namespace HomeTaskManagement.App.Task.Instance
             var changeMsg = new TaskInstanceStatusChanged { Id = task.Id, PreviousStatus = task.Status, CurrentStatus = req.NewStatus };
 
             task.Status = req.NewStatus;
-            task.ApprovedByUserId = req.ApproverUserId;
-            task.ApprovedAt = req.At;
+            task.UpdatedStatusByUserId = req.ApproverUserId;
+            task.UpdatedStatusAt = req.At;
             _store.Put(req.Id, task);
 
             _messages.Publish(changeMsg);
@@ -87,7 +86,18 @@ namespace HomeTaskManagement.App.Task.Instance
 
         private Response Schedule(ProposedTaskInstance task)
         {
-            _store.Put(task.Id, TaskInstanceRecord.From(task));
+            var record = TaskInstanceRecord.From(task);
+            _store.Put(task.Id, record);
+            _messages.Publish(new TaskInstanceScheduled { Record = record });
+            return Response.Success;
+        }
+
+        public Response Apply(MarkTaskFunded req)
+        {
+            var task = Get(req.Id);
+            task.FundedByUserId = req.ByUserId;
+            task.FundedOn = req.At;
+            _store.Put(task.Id, task);
             return Response.Success;
         }
     }

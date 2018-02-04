@@ -9,14 +9,12 @@ namespace HomeTaskManagement.App.ServiceJobs
     public sealed class HandleTaskInstanceCompletionPayments : IDisposable
     {
         private readonly TaskInstances _taskInstances;
-        private readonly Tasks _tasks;
         private readonly Accounts _accounts;
         private readonly Messages _messages;
 
-        public HandleTaskInstanceCompletionPayments(TaskInstances taskInstances, Tasks tasks, Accounts accounts, Messages messages)
+        public HandleTaskInstanceCompletionPayments(TaskInstances taskInstances, Accounts accounts, Messages messages)
         {
             _taskInstances = taskInstances;
-            _tasks = tasks;
             _accounts = accounts;
             _messages = messages;
         }
@@ -34,20 +32,19 @@ namespace HomeTaskManagement.App.ServiceJobs
         private void OnTaskInstanceStatusChanged(TaskInstanceStatusChanged msg)
         {
             var taskInstance = _taskInstances.Get(msg.Id);
-            var task = _tasks.Get(taskInstance.TaskId);
 
             if (msg.PreviousStatus == TaskInstanceStatus.Scheduled && msg.CurrentStatus == TaskInstanceStatus.Completed)
                 _accounts.Apply(new TransferRequest(PoolAccounts.TaskFundingAccountId, taskInstance.UserId,
-                    $"Payment for {task.Name} - {taskInstance.ApprovedAt}", taskInstance.Price));
+                    $"Payment for {taskInstance.Description} - {taskInstance.Due}", taskInstance.Price));
             else if (msg.PreviousStatus == TaskInstanceStatus.Scheduled && msg.CurrentStatus == TaskInstanceStatus.Waived)
                 _accounts.Apply(new TransferRequest(PoolAccounts.TaskFundingAccountId, taskInstance.UserId,
-                    $"Waived fee for {task.Name} - {taskInstance.ApprovedAt}", taskInstance.Price));
+                    $"Waived fee for {taskInstance.Description} - {taskInstance.Due}", taskInstance.Price));
             else if (msg.PreviousStatus == TaskInstanceStatus.NotCompleted && msg.CurrentStatus == TaskInstanceStatus.Waived)
                 _accounts.Apply(new TransferRequest(PoolAccounts.OutsourceAccountId, taskInstance.UserId,
-                    $"Waived fee for not completed {task.Name} - {taskInstance.ApprovedAt}", taskInstance.Price));
+                    $"Waived fee for not completed {taskInstance.Description} - {taskInstance.Due}", taskInstance.Price));
             else if (msg.PreviousStatus == TaskInstanceStatus.Scheduled && msg.CurrentStatus == TaskInstanceStatus.NotCompleted)
                 _accounts.Apply(new TransferRequest(PoolAccounts.TaskFundingAccountId, PoolAccounts.OutsourceAccountId,
-                    $"Outsourced {task.Name} - {taskInstance.ApprovedAt}", taskInstance.Price));
+                    $"Outsourced {taskInstance.Description} - {taskInstance.Due}", taskInstance.Price));
         }
     }
 }

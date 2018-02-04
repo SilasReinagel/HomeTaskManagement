@@ -63,7 +63,10 @@ namespace HomeTaskManagement.WebAPI
                     new ScheduleTasksDaily(taskInstances))
                         .Start();
 
-                new HandleTaskInstanceCompletionPayments(taskInstances, tasks, accounts, messages)
+                new HandleTaskInstanceCompletionPayments(taskInstances, accounts, messages)
+                    .Start();
+
+                new FundScheduledTasks(taskInstances, accounts, messages)
                     .Start();
             }
             catch (Exception e)

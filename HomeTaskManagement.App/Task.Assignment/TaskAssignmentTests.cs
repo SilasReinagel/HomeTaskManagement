@@ -101,9 +101,11 @@ namespace HomeTaskManagement.App.Task.Assignment
             var instance = assignment.FutureInstancesThrough(_now.Plus(TimeSpan.FromDays(7))).Single();
 
             Assert.AreEqual(WeeklyTaskId, instance.TaskId);
+            Assert.AreEqual("WeeklyTask", instance.TaskDescription);
             Assert.AreEqual(User1, instance.UserId);
             Assert.AreEqual(_tasks.Rates.GetInstanceRate(_tasks.Get(WeeklyTaskId)), instance.Price);
             Assert.AreEqual(_now.Next(_settings.WeekEndDeadline).StartOfDay().Plus(_settings.TaskInstanceDeadlineUtcOffset), instance.Due);
+            Assert.AreEqual(_now.Next(_settings.WeekEndDeadline).StartOfDay().Plus(_settings.TaskInstanceDeadlineUtcOffset).Minus(TimeSpan.FromDays(7)), instance.Start);
         }
 
         [TestMethod]

@@ -7,6 +7,7 @@ namespace HomeTaskManagement.App.Task.Instance
     public sealed class TaskInstanceRecord
     {
         public string Id => new Sha256Hash($"{TaskId}-{UserId}-{Due.Millis.ToString()}");
+        public string Description { get; set; }
         public TaskInstanceStatus Status { get; set; }
         public string TaskId { get; set; }
         public string UserId { get; set; }
@@ -17,8 +18,8 @@ namespace HomeTaskManagement.App.Task.Instance
         public UnixUtcTime FundedOn { get; set; }
         public string FundedByUserId { get; set; }
 
-        public string ApprovedByUserId { get; set; }
-        public UnixUtcTime ApprovedAt { get; set; }
+        public string UpdatedStatusByUserId { get; set; }
+        public UnixUtcTime UpdatedStatusAt { get; set; }
 
         public TaskInstanceRecord()
         {
@@ -26,14 +27,15 @@ namespace HomeTaskManagement.App.Task.Instance
 
         public static TaskInstanceRecord From(ProposedTaskInstance proposed)
         {
-            return New(proposed.TaskId, proposed.UserId, proposed.Due, proposed.Price);
+            return New(proposed.TaskId, proposed.TaskDescription, proposed.UserId, proposed.Due, proposed.Price);
         }
 
-        public static TaskInstanceRecord New(string taskId, string userId, UnixUtcTime due, int price)
+        public static TaskInstanceRecord New(string taskId, string taskDescription, string userId, UnixUtcTime due, int price)
         {
             return new TaskInstanceRecord
             {
                 Status = TaskInstanceStatus.Scheduled,
+                Description = taskDescription,
                 TaskId = taskId,
                 UserId = userId,
                 Due = due,
@@ -43,8 +45,8 @@ namespace HomeTaskManagement.App.Task.Instance
                 FundedOn = new UnixUtcTime(0),
                 FundedByUserId = new DefaultUser(),
 
-                ApprovedByUserId = new DefaultUser(),
-                ApprovedAt = new UnixUtcTime(0),
+                UpdatedStatusByUserId = new DefaultUser(),
+                UpdatedStatusAt = new UnixUtcTime(0),
             };
         }
     }

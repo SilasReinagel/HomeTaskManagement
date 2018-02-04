@@ -34,6 +34,7 @@ namespace HomeTaskManagement.Sql.Tasks.Instances
         {
             var sql = @"UPDATE HomeTask.TaskInstances SET 
                             Id = @id,
+                            Description = @description,
                             Status = @status,	
                             TaskId = @taskId,
                             UserId = @userId,
@@ -42,21 +43,22 @@ namespace HomeTaskManagement.Sql.Tasks.Instances
 	                        IsFunded = @isFunded,
                             FundedOn = @fundedOn,
 	                        FundedByUserId = @fundedByUserId,
-                            ApprovedAt = @approvedAt,
-	                        ApprovedByUserId = @approvedByUserId
+                            UpdatedStatusAt = @updatedStatusAt,
+	                        UpdatedStatusByUserId = @updatedStatusByUserId
                         WHERE Id = @id;
 
                         IF @@ROWCOUNT = 0
                         BEGIN
-                            INSERT INTO HomeTask.TaskInstances (Id, Status, TaskId, UserId, Due, Price, 
-                                IsFunded, FundedOn, FundedByUserId, ApprovedAt, ApprovedByUserId)
-                            VALUES (@id, @status, @taskId, @userId, @due, @price, 
-                                @isFunded, @fundedOn, @fundedByUserId, @approvedAt, @approvedByUserId)
+                            INSERT INTO HomeTask.TaskInstances (Id, Description, Status, TaskId, UserId, Due, Price, 
+                                IsFunded, FundedOn, FundedByUserId, UpdatedStatusAt, UpdatedStatusByUserId)
+                            VALUES (@id, @description, @status, @taskId, @userId, @due, @price, 
+                                @isFunded, @fundedOn, @fundedByUserId, @updatedStatusAt, @updatedStatusByUserId)
                         END";
 
             _db.Execute(sql, new
                 {
                     id = record.Id,
+                    description = record.Description,
                     status = record.Status.ToString(),
                     taskId = record.TaskId,
                     userId = record.UserId,
@@ -65,8 +67,8 @@ namespace HomeTaskManagement.Sql.Tasks.Instances
                     isFunded = record.IsFunded,
                     fundedOn = UnixUtcTime.ToDateTime(record.FundedOn),
                     fundedByUserId = record.FundedByUserId,
-                    approvedAt = UnixUtcTime.ToDateTime(record.ApprovedAt),
-                    approvedByUserId = record.ApprovedByUserId
+                    updatedStatusAt = UnixUtcTime.ToDateTime(record.UpdatedStatusAt),
+                    updatedStatusByUserId = record.UpdatedStatusByUserId
                 });
         }
 

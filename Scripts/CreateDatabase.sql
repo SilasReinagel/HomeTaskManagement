@@ -46,6 +46,7 @@ IF (EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'HomeTa
 
 CREATE TABLE HomeTask.TaskInstances (
 	Id varchar(255) NOT NULL PRIMARY KEY,
+	Description varchar(255) NOT NULL,
     Status varchar(255) NOT NULL,	
     TaskId varchar(255) NOT NULL,
 	FOREIGN KEY (TaskId) REFERENCES HomeTask.Tasks(Id),
@@ -57,9 +58,9 @@ CREATE TABLE HomeTask.TaskInstances (
     FundedOn datetime2 NOT NULL,
 	FundedByUserId varchar(255) NOT NULL,
 	FOREIGN KEY (FundedByUserId) REFERENCES HomeTask.Users(Id),
-    ApprovedAt datetime2 NOT NULL,
-	ApprovedByUserId varchar(255) NOT NULL,
-	FOREIGN KEY (ApprovedByUserId) REFERENCES HomeTask.Users(Id)
+    UpdatedStatusAt datetime2 NOT NULL,
+	UpdatedStatusByUserId varchar(255) NOT NULL,
+	FOREIGN KEY (UpdatedStatusByUserId) REFERENCES HomeTask.Users(Id)
 )
 GO
 

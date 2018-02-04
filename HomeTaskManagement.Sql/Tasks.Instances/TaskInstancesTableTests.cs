@@ -40,7 +40,7 @@ namespace HomeTaskManagement.Sql.Tasks.Instances
         [TestMethod]
         public void TaskInstancesTable_PutGet_Works()
         {
-            var sampleTask = TaskInstanceRecord.New(SampleTaskId, SampleUserId, Clock.UnixUtcNow, 50);
+            var sampleTask = TaskInstanceRecord.New(SampleTaskId, "Task Description", SampleUserId, Clock.UnixUtcNow, 50);
 
             _taskInstances.Put(sampleTask.Id, sampleTask);
 
@@ -52,8 +52,8 @@ namespace HomeTaskManagement.Sql.Tasks.Instances
             Assert.AreEqual(sampleTask.Status, task.Status);
             Assert.AreEqual(sampleTask.TaskId, task.TaskId);
             Assert.AreEqual(sampleTask.UserId, task.UserId);
-            Assert.AreEqual(sampleTask.ApprovedAt, task.ApprovedAt);
-            Assert.AreEqual(sampleTask.ApprovedByUserId, task.ApprovedByUserId);
+            Assert.AreEqual(sampleTask.UpdatedStatusAt, task.UpdatedStatusAt);
+            Assert.AreEqual(sampleTask.UpdatedStatusByUserId, task.UpdatedStatusByUserId);
             Assert.AreEqual(sampleTask.Due, task.Due);
             Assert.AreEqual(sampleTask.FundedByUserId, task.FundedByUserId);
             Assert.AreEqual(sampleTask.FundedOn, task.FundedOn);

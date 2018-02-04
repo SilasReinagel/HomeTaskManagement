@@ -50,6 +50,18 @@ namespace HomeTaskManagement.App.Task.Instance
         }
 
         [TestMethod]
+        public void TaskInstances_ScheduleTask_TaskInstanceCreatedMessageSent()
+        {
+            var msgReceived = false;
+            _messages.Subscribe<TaskInstanceScheduled>(x => msgReceived = true, this);
+            _assignments.Assignments.Apply(new AssignTask(_tasks.DailyTask, _users.User1, _now));
+
+            var resp = _taskInstances.Apply(new ScheduleWorkItemsThrough(_now.Plus(TimeSpan.FromDays(1))));
+
+            Assert.AreEqual(true, msgReceived);
+        }
+
+        [TestMethod]
         public void TaskInstances_ScheduleWeeklyForNextWeek_InstanceCorrect()
         {
             _assignments.Assignments.Apply(new AssignTask(_tasks.WeeklyTask, _users.User1, _now));
@@ -93,8 +105,8 @@ namespace HomeTaskManagement.App.Task.Instance
 
             resp.AssertStatusIs(ResponseStatus.Succeeded);
             Assert.AreEqual(TaskInstanceStatus.Completed, _taskInstances.Get(taskInstanceId).Status);
-            Assert.AreEqual(_users.User2, _taskInstances.Get(taskInstanceId).ApprovedByUserId);
-            Assert.AreEqual(_now, _taskInstances.Get(taskInstanceId).ApprovedAt);
+            Assert.AreEqual(_users.User2, _taskInstances.Get(taskInstanceId).UpdatedStatusByUserId);
+            Assert.AreEqual(_now, _taskInstances.Get(taskInstanceId).UpdatedStatusAt);
             Assert.AreEqual(true, taskCompletedMessageReceived);
         }
 
@@ -109,9 +121,21 @@ namespace HomeTaskManagement.App.Task.Instance
 
             resp.AssertStatusIs(ResponseStatus.Succeeded);
             Assert.AreEqual(TaskInstanceStatus.Waived, _taskInstances.Get(taskInstanceId).Status);
-            Assert.AreEqual(_users.User2, _taskInstances.Get(taskInstanceId).ApprovedByUserId);
-            Assert.AreEqual(_now, _taskInstances.Get(taskInstanceId).ApprovedAt);
+            Assert.AreEqual(_users.User2, _taskInstances.Get(taskInstanceId).UpdatedStatusByUserId);
+            Assert.AreEqual(_now, _taskInstances.Get(taskInstanceId).UpdatedStatusAt);
             Assert.AreEqual(true, taskWaivedMessageReceived);
+        }
+
+        [TestMethod]
+        public void TaskInstances_MarkTaskFunded_InstanceCorrect()
+        {
+            var taskInstanceId = GetAssignedScheduledTaskId();
+
+            var resp = _taskInstances.Apply(new MarkTaskFunded { Id = taskInstanceId, At = _now, ByUserId = _users.User1 });
+
+            resp.AssertStatusIs(ResponseStatus.Succeeded);
+            Assert.AreEqual(_now, _taskInstances.Get(taskInstanceId).FundedOn);
+            Assert.AreEqual(_users.User1, _taskInstances.Get(taskInstanceId).FundedByUserId);
         }
 
         private string GetAssignedScheduledTaskId()
