@@ -23,7 +23,7 @@ namespace HomeTaskManagement.App.User
             return _userRecords.Get(userId);
         }
 
-        public Response Apply(CreateUser req)
+        public Response Apply(RegisterUser req)
         {
             return Record(x => x.Put(req.Id, 
                     new UserRecord

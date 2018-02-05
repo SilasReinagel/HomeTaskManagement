@@ -129,8 +129,8 @@ namespace HomeTaskManagement.App.Task.Assignment
 
         private void SetupSampleUsers()
         {
-            _users.Apply(new CreateUser(User1, "username1", "user1"));
-            _users.Apply(new CreateUser(User2, "username2", "user2"));
+            _users.Apply(new RegisterUser(User1, "username1", "user1"));
+            _users.Apply(new RegisterUser(User2, "username2", "user2"));
         }
 
         private void SetupSampleTasks()

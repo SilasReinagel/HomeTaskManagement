@@ -30,5 +30,10 @@ namespace HomeTaskManagement.App.Common
                 throw new ArgumentNullException($"String '{name}' was null or empty.");
             return s;
         }
+
+        public static bool ContainsAnyCase(this string s, string substring)
+        {
+            return s.ToLowerInvariant().Contains(substring.ToLowerInvariant());
+        }
     }
 }
