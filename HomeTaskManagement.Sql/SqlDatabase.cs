@@ -46,6 +46,13 @@ namespace HomeTaskManagement.Sql
             }
         }
 
+        public void UsingConnection(Action<IDbConnection> action)
+        {
+            _conn.Open();
+            action(_conn);
+            _conn.Close();
+        }
+
         public T QuerySingle<T>(string sql, object parameters)
         {
             return _conn.QuerySingle<T>(sql, parameters)
@@ -56,6 +63,12 @@ namespace HomeTaskManagement.Sql
         {
             return _conn.Query<T>(sql)
                 .Select(item => ThrowExceptionIfNotValid(sql, new { }, item));
+        }
+
+        public IEnumerable<T> Query<T>(string sql, object parameters)
+        {
+            return _conn.Query<T>(sql, parameters)
+                .Select(item => ThrowExceptionIfNotValid(sql, parameters, item));
         }
 
         public void Execute(string sql, object parameters)
