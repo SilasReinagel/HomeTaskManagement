@@ -1,5 +1,6 @@
 ﻿using HomeTaskManagement.App.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 
 namespace HomeTaskManagement.App.User
 {
@@ -50,7 +51,10 @@ namespace HomeTaskManagement.App.User
 
         private Response CreateUser(params UserRoles[] roles)
         {
-            return _users.Apply(new CreateUser(UserId, "username", "name"));
+            var result = _users.Apply(new RegisterUser(UserId, "username", "name"));
+            if (roles.Any())
+                result = _users.AddRolesToUser(new AddRoles(UserId, roles));
+            return result;
         }
     }
 }

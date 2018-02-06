@@ -7,6 +7,25 @@ namespace HomeTaskManagement.App.Common
 {
     internal static class TypeExtensions
     {
+        private static readonly Dictionary<string, Type> _typesByName = new Dictionary<string, Type>();
+
+        public static Type AsType(this string name, string inNameSpace)
+        {
+            var key = name.ToLowerInvariant();
+            if (_typesByName.ContainsKey(key))
+                return _typesByName[key];
+
+            var types = AppDomain.CurrentDomain.GetAssemblies()
+                                   .Where(x => x.FullName.StartsWith(inNameSpace))
+                                   .SelectMany(x => x.GetTypes())
+                                   .Where(x => !(x.Name.StartsWith("<>")));
+            types.ForEach(x => _typesByName.Add(x.Name.ToLowerInvariant(), x));
+
+            if (!_typesByName.ContainsKey(key))
+                throw new KeyNotFoundException($"Type not found in current assemblies: '{name}'");
+            return _typesByName[key];
+        }
+
         public static bool IsString(this Type type)
         {
             return type == typeof(string);

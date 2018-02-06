@@ -12,8 +12,8 @@ namespace HomeTaskManagement.App.User
         public SampleUsers()
         {
             Users = new Users(new InMemoryEntityStore<UserRecord>());
-            Users.Apply(new CreateUser(User1, "User1", "User1"));
-            Users.Apply(new CreateUser(User2, "User2", "User2"));
+            Users.Apply(new RegisterUser(User1, "User1", "User1"));
+            Users.Apply(new RegisterUser(User2, "User2", "User2"));
         }
     }
 }

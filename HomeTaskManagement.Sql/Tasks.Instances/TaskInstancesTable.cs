@@ -30,7 +30,7 @@ namespace HomeTaskManagement.Sql.Tasks.Instances
             return _db.Query<TaskInstanceRecord>(sql);
         }
 
-        public void Put(string id, TaskInstanceRecord record)
+        public void Put(string id, TaskInstanceRecord obj)
         {
             var sql = @"UPDATE HomeTask.TaskInstances SET 
                             Id = @id,
@@ -57,18 +57,18 @@ namespace HomeTaskManagement.Sql.Tasks.Instances
 
             _db.Execute(sql, new
                 {
-                    id = record.Id,
-                    description = record.Description,
-                    status = record.Status.ToString(),
-                    taskId = record.TaskId,
-                    userId = record.UserId,
-                    due = UnixUtcTime.ToDateTime(record.Due),
-                    price = record.Price,
-                    isFunded = record.IsFunded,
-                    fundedOn = UnixUtcTime.ToDateTime(record.FundedOn),
-                    fundedByUserId = record.FundedByUserId,
-                    updatedStatusAt = UnixUtcTime.ToDateTime(record.UpdatedStatusAt),
-                    updatedStatusByUserId = record.UpdatedStatusByUserId
+                    id = obj.Id,
+                    description = obj.Description,
+                    status = obj.Status.ToString(),
+                    taskId = obj.TaskId,
+                    userId = obj.UserId,
+                    due = UnixUtcTime.ToDateTime(obj.Due),
+                    price = obj.Price,
+                    isFunded = obj.IsFunded,
+                    fundedOn = UnixUtcTime.ToDateTime(obj.FundedOn),
+                    fundedByUserId = obj.FundedByUserId,
+                    updatedStatusAt = UnixUtcTime.ToDateTime(obj.UpdatedStatusAt),
+                    updatedStatusByUserId = obj.UpdatedStatusByUserId
                 });
         }
 

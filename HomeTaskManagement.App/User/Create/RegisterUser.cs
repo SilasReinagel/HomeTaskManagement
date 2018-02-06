@@ -1,13 +1,13 @@
 ﻿
 namespace HomeTaskManagement.App.User
 {
-    public sealed class CreateUser
+    public sealed class RegisterUser
     {
         public string Id { get; set; }
         public string Username { get; set; }
         public string Name { get; set; }
 
-        public CreateUser(string id, string username, string name)
+        public RegisterUser(string id, string username, string name)
         {
             Id = id;
             Username = username;
