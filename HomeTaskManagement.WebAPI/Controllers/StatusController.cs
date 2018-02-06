@@ -10,7 +10,7 @@ namespace HomeTaskManagement.WebAPI.Controllers
         [HttpGet]
         public IActionResult GetStatus([FromServices]MiniAuth auth, [FromServices]AppHealth appStatus)
         {
-            if (!auth.Validate(Request))
+            if (auth.Validate(Request).Status != ResponseStatus.Succeeded)
                 return Unauthorized();
             
             return new JsonHttpResponse(appStatus);

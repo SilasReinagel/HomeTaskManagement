@@ -32,7 +32,7 @@ namespace HomeTaskManagement.App.User
         {
             CreateUser();
 
-            var resp = _users.AddRolesToUser(new AddRoles(UserId, UserRoles.Admin));
+            var resp = _users.Apply(new AddRoles(UserId, UserRoles.Admin));
 
             Assert.IsTrue(resp.Succeeded);
             Assert.IsTrue(_userRecords.Get(UserId).Roles.Contains(UserRoles.Admin));
@@ -43,7 +43,7 @@ namespace HomeTaskManagement.App.User
         {
             CreateUser(UserRoles.Admin);
 
-            var resp = _users.RemoveRolesFromUser(new RemoveRoles(UserId, UserRoles.Admin));
+            var resp = _users.Apply(new RemoveRoles(UserId, UserRoles.Admin));
 
             Assert.IsTrue(resp.Succeeded);
             Assert.IsTrue(!_userRecords.Get(UserId).Roles.Contains(UserRoles.Admin));
@@ -53,7 +53,7 @@ namespace HomeTaskManagement.App.User
         {
             var result = _users.Apply(new RegisterUser(UserId, "username", "name"));
             if (roles.Any())
-                result = _users.AddRolesToUser(new AddRoles(UserId, roles));
+                result = _users.Apply(new AddRoles(UserId, roles));
             return result;
         }
     }

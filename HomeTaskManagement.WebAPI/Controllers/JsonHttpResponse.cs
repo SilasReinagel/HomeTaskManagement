@@ -17,6 +17,7 @@ namespace HomeTaskManagement.WebAPI
             { ResponseStatus.Errored, HttpStatusCode.InternalServerError },
             { ResponseStatus.UnknownEntity, HttpStatusCode.NotFound },
             { ResponseStatus.Succeeded, HttpStatusCode.OK },
+            { ResponseStatus.Unauthorized, HttpStatusCode.Unauthorized },
         };
 
         private readonly HttpStatusCode _statusCode;

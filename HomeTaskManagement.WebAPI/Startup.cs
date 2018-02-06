@@ -1,4 +1,5 @@
 ﻿using HomeTaskManagement.App.Accounting;
+using HomeTaskManagement.App.Commands;
 using HomeTaskManagement.App.Common;
 using HomeTaskManagement.App.Pledge;
 using HomeTaskManagement.App.ServiceJobs;
@@ -7,6 +8,7 @@ using HomeTaskManagement.App.Task.Assignment;
 using HomeTaskManagement.App.Task.Instance;
 using HomeTaskManagement.App.User;
 using HomeTaskManagement.Sql;
+using HomeTaskManagement.Sql.Users;
 using HomeTaskManagement.WebAPI.Auth;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -14,6 +16,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace HomeTaskManagement.WebAPI
@@ -44,7 +47,7 @@ namespace HomeTaskManagement.WebAPI
                 services.AddSingleton(messages);
                 var eventStore = new InMemoryEventStore();
                 services.AddSingleton<IEventStore>(eventStore);
-                var users = new Users(new InMemoryEntityStore<UserRecord>());
+                var users = new Users(new UsersTable(sqlDb));
                 services.AddSingleton(users);
                 var tasks = new Tasks(new InMemoryEntityStore<TaskRecord>());
                 services.AddSingleton(tasks);
@@ -57,6 +60,12 @@ namespace HomeTaskManagement.WebAPI
                 var taskInstances = new TaskInstances(new InMemoryTaskInstanceStore(), assignments, messages);
                 services.AddSingleton(taskInstances);
 
+                services.AddSingleton(new AppCommands(new Dictionary<string, ICommand>
+                {
+                    { nameof(RegisterUser), new JsonCommand<RegisterUser>(x => users.Apply(x)) },
+                    { nameof(WaiveTask), new AdminOnly(new JsonCommand<WaiveTask>(x => taskInstances.Apply(x))) }
+                }));
+
                 new AppRecurringTasks(
                     new FundPledgesDaily(pledges), 
                     new MarkNotCompletedTasksDaily(taskInstances),
@@ -68,6 +77,9 @@ namespace HomeTaskManagement.WebAPI
 
                 new FundScheduledTasks(taskInstances, accounts, messages)
                     .Start();
+
+                Console.WriteLine($"Startup complete.");
+                Debug.WriteLine($"Startup complete.");
             }
             catch (Exception e)
             {

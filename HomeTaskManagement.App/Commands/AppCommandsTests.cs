@@ -18,16 +18,16 @@ namespace HomeTaskManagement.App.Commands
         public void Init()
         {
             _user1 = new AppActor(_user1Id, new DefaultUserRoles());
-            _commands = new AppCommands(new Dictionary<string, Func<ICommand>>
+            _commands = new AppCommands(new Dictionary<string, ICommand>
             {
-                { nameof(RegisterUser), () => new SampleCommand(nameof(RegisterUser)) }
+                { nameof(RegisterUser), new SampleCommand<RegisterUser>() }
             });
         }
 
         [TestMethod]
         public void AppCommands_UnknownCommand_BadRequest()
         {
-            var resp = _commands.Execute(_user1, "DoUnknownThing", "{}");
+            var resp = _commands.Execute(new CommandParams(_user1, "DoUnknownThing", "{}"));
 
             resp.AssertStatusIs(ResponseStatus.BadRequest);
             Assert.IsTrue(resp.ErrorMessage.ContainsAnyCase("unknown"));
@@ -36,7 +36,7 @@ namespace HomeTaskManagement.App.Commands
         [TestMethod]
         public void AppCommands_EmptyJsonRequest_BadRequest()
         {
-            var resp = _commands.Execute(_user1, nameof(RegisterUser), "{}");
+            var resp = _commands.Execute(new CommandParams(_user1, nameof(RegisterUser), "{}"));
 
             resp.AssertStatusIs(ResponseStatus.BadRequest);
             Assert.IsTrue(resp.ErrorMessage.ContainsAnyCase("name"));
@@ -45,24 +45,16 @@ namespace HomeTaskManagement.App.Commands
         [TestMethod]
         public void AppCommands_ValidRequest_ResponseIsSuccess()
         {
-            var resp = _commands.Execute(_user1, nameof(RegisterUser), Json.ToString(new RegisterUser(new Id(), "username", "name")));
+            var resp = _commands.Execute(new CommandParams(_user1, nameof(RegisterUser), Json.ToString(new RegisterUser(new Id(), "username", "name"))));
 
             resp.AssertStatusIs(ResponseStatus.Succeeded);
         }
 
-        private class SampleCommand : ICommand
+        private class SampleCommand<T> : ICommand
         {
-            public Type RequestType { get; }
-
-            public SampleCommand(string typeName)
+            public Response Execute(CommandParams req)
             {
-                RequestType = typeName.AsType("HomeTaskManagement");
-            }
-
-            public Response Execute(object req)
-            {
-                if (req.GetType() != RequestType)
-                    throw new InvalidOperationException($"Attempted to invoke command requiring request type {RequestType} with {req.GetType().Name}");
+                var request = Json.ToObject<T>(req.JsonRequest);
                 return Response.Success;
             }
         }

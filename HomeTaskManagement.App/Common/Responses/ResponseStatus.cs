@@ -10,5 +10,6 @@ namespace HomeTaskManagement.App.Common
         DependencyFailure,
         InvalidState,
         UnknownEntity,
+        Unauthorized,
     }
 }

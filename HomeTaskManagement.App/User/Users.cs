@@ -35,12 +35,12 @@ namespace HomeTaskManagement.App.User
                     }));
         }
 
-        public Response AddRolesToUser(AddRoles req)
+        public Response Apply(AddRoles req)
         {
             return Record(x => _userRecords.Update(req.UserId, u => u.Roles = u.Roles.Union(req.Roles).ToHashSet()));
         }
 
-        public Response RemoveRolesFromUser(RemoveRoles req)
+        public Response Apply(RemoveRoles req)
         {
             return Record(x => _userRecords.Update(req.UserId, u => u.Roles = u.Roles.Except(req.Roles).ToHashSet()));
         }
