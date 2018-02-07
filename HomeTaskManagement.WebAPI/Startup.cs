@@ -60,9 +60,27 @@ namespace HomeTaskManagement.WebAPI
                 var taskInstances = new TaskInstances(new InMemoryTaskInstanceStore(), assignments, messages);
                 services.AddSingleton(taskInstances);
 
-                services.AddSingleton(new AppCommands(new Dictionary<string, ICommand>
+                services.AddSingleton(new AppCommands(new Dictionary<string, ICommand>(StringComparer.InvariantCultureIgnoreCase)
                 {
+                    { nameof(SetOverdraftPolicy), new AdminOnly(new JsonCommand<SetOverdraftPolicy>(x => accounts.Apply(x))) },
+                    { nameof(TransactionRequest), new AdminOnly(new JsonCommand<TransactionRequest>(x => accounts.Apply(x))) },
+
                     { nameof(RegisterUser), new JsonCommand<RegisterUser>(x => users.Apply(x)) },
+                    { nameof(AddRoles), new AdminOnly(new JsonCommand<AddRoles>(x => users.Apply(x))) },
+                    { nameof(RemoveRoles), new AdminOnly(new JsonCommand<RemoveRoles>(x => users.Apply(x))) },
+
+                    { nameof(AssignTask), new AdminOnly(new JsonCommand<AssignTask>(x => assignments.Apply(x))) },
+
+                    { nameof(CreateTask), new AdminOnly(new JsonCommand<CreateTask>(x => tasks.Apply(x))) },
+                    { nameof(DeleteTask), new AdminOnly(new JsonCommand<DeleteTask>(x => tasks.Apply(x))) },
+
+                    { nameof(SetPledge), new AdminOnly(new JsonCommand<SetPledge>(x => pledges.Apply(x))) },
+                    { nameof(FundPledges), new ServiceOrAdmin(new JsonCommand<FundPledges>(x => pledges.Apply(x))) },
+
+                    { nameof(MarkTaskComplete), new ApproverOnly(new JsonCommand<MarkTaskComplete>(x => taskInstances.Apply(x))) },
+                    { nameof(MarkTaskNotComplete), new JsonCommand<MarkTaskNotComplete>(x => taskInstances.Apply(x)) },
+                    { nameof(MarkTaskFunded), new ServiceOrAdmin(new JsonCommand<MarkTaskNotComplete>(x => taskInstances.Apply(x))) },
+                    { nameof(ScheduleWorkItemsThrough), new ServiceOrAdmin(new JsonCommand<MarkTaskNotComplete>(x => taskInstances.Apply(x))) },
                     { nameof(WaiveTask), new AdminOnly(new JsonCommand<WaiveTask>(x => taskInstances.Apply(x))) }
                 }));
 
@@ -77,9 +95,6 @@ namespace HomeTaskManagement.WebAPI
 
                 new FundScheduledTasks(taskInstances, accounts, messages)
                     .Start();
-
-                Console.WriteLine($"Startup complete.");
-                Debug.WriteLine($"Startup complete.");
             }
             catch (Exception e)
             {

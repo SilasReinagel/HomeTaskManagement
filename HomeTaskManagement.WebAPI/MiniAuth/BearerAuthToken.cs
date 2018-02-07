@@ -39,7 +39,7 @@ namespace HomeTaskManagement.WebAPI.Auth
         {
             return input.Length % divisor == 0
                 ? input
-                : RPad(input, $"{input}{pad}", divisor);
+                : RPad($"{input}{pad}", pad, divisor);
         }
     }
 }

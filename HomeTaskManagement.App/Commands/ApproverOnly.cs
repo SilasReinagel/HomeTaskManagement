@@ -4,11 +4,11 @@ using System.Linq;
 
 namespace HomeTaskManagement.App.Commands
 {
-    public sealed class RequiresApprover : ICommand
+    public sealed class ApproverOnly : ICommand
     {
         private readonly ICommand _command;
 
-        public RequiresApprover(ICommand command)
+        public ApproverOnly(ICommand command)
         {
             _command = command;
         }
