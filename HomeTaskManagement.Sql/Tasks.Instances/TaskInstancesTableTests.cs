@@ -45,7 +45,7 @@ namespace HomeTaskManagement.Sql.Tasks.Instances
             _taskInstances.Put(sampleTask.Id, sampleTask);
 
             Assert.IsTrue(_taskInstances.GetAll().Any(x => x.Id.Matches(sampleTask.Id)));
-            var task = _taskInstances.Get(sampleTask.Id);
+            var task = _taskInstances.Get(sampleTask.Id).Value;
             Assert.AreEqual(sampleTask.Id, task.Id);
             Assert.AreEqual(sampleTask.IsFunded, task.IsFunded);
             Assert.AreEqual(sampleTask.Price, task.Price);

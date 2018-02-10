@@ -36,7 +36,7 @@ namespace HomeTaskManagement.Sql.Tasks
                     Frequency = TaskFrequency.Daily
                 });
 
-            var task = _tasks.Get(SampleTaskId);
+            var task = _tasks.Get(SampleTaskId).Value;
 
             Assert.AreEqual(SampleTaskId, task.Id);
             Assert.AreEqual("SampleTask", task.Name);

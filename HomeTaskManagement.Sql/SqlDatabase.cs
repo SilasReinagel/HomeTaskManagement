@@ -53,9 +53,10 @@ namespace HomeTaskManagement.Sql
             _conn.Close();
         }
 
-        public T QuerySingle<T>(string sql, object parameters)
+        public Maybe<T> QuerySingle<T>(string sql, object parameters)
         {
-            return _conn.QuerySingle<T>(sql, parameters)
+            return _conn.Query<T>(sql, parameters)
+                .SingleAsMaybe()
                 .Then(x => ThrowExceptionIfNotValid(sql, parameters, x));
         }
 

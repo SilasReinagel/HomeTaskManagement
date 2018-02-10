@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace HomeTaskManagement.App.Common
 {
     public sealed class Maybe<T>
@@ -11,6 +13,13 @@ namespace HomeTaskManagement.App.Common
         {
             IsMissing = isMissing;
             Value = value;
+        }
+
+        public Maybe<TOut> IfPresent<TOut>(Func<T, TOut> getResult)
+        {
+            return IsMissing
+                ? Maybe<TOut>.Missing
+                : getResult(Value);
         }
 
         public static Maybe<T> Missing => new Maybe<T>(true, default(T));

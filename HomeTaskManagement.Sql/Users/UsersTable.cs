@@ -15,14 +15,14 @@ namespace HomeTaskManagement.Sql.Users
             _db = db;
         }
 
-        public UserRecord Get(string id)
+        public Maybe<UserRecord> Get(string id)
         {
             var sql = @"SELECT * 
                         FROM HomeTask.Users
                         WHERE Id = @id";
 
             return _db.QuerySingle<UserSqlRecord>(sql, new { id })
-                .ToRecord();
+                .Then(x => x.Value.ToRecord());
         }
 
         public IEnumerable<UserRecord> GetAll()

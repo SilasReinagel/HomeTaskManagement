@@ -13,13 +13,14 @@ namespace HomeTaskManagement.Sql.Tasks.Instances
             _db = db;
         }
 
-        public TaskInstanceRecord Get(string id)
+        public Maybe<TaskInstanceRecord> Get(string id)
         {
             var sql = @"SELECT * 
                         FROM HomeTask.TaskInstances
                         WHERE Id = @id";
 
-            return _db.QuerySingle<TaskInstanceRecord>(sql, new { id });
+            return _db.Query<TaskInstanceRecord>(sql, new { id })
+                .SingleAsMaybe();
         }
 
         public IEnumerable<TaskInstanceRecord> GetAll()

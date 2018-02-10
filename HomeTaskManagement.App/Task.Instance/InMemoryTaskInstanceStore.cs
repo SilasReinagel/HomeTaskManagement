@@ -7,7 +7,7 @@ namespace HomeTaskManagement.App.Task.Instance
     {
         private readonly InMemoryEntityStore<TaskInstanceRecord> _store = new InMemoryEntityStore<TaskInstanceRecord>();
             
-        public TaskInstanceRecord Get(string id)
+        public Maybe<TaskInstanceRecord> Get(string id)
         {
             return _store.Get(id);
         }

@@ -20,7 +20,7 @@ namespace HomeTaskManagement.App.User
 
         public UserRecord Get(string userId)
         {
-            return _userRecords.Get(userId);
+            return _userRecords.Get(userId).Value;
         }
 
         public Response Apply(RegisterUser req)

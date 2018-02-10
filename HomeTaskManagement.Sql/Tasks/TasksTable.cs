@@ -13,7 +13,7 @@ namespace HomeTaskManagement.Sql.Tasks
             _db = db;
         }
 
-        public TaskRecord Get(string id)
+        public Maybe<TaskRecord> Get(string id)
         {
             var sql = @"SELECT * 
                         FROM HomeTask.Tasks

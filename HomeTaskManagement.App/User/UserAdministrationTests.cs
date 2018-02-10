@@ -24,7 +24,7 @@ namespace HomeTaskManagement.App.User
             var resp = CreateUser();
 
             Assert.IsTrue(resp.Succeeded);
-            Assert.IsTrue(_userRecords.Get(UserId).Username.Equals("username"));
+            Assert.IsTrue(_users.Get(UserId).Username.Equals("username"));
         }
 
         [TestMethod]
@@ -35,7 +35,7 @@ namespace HomeTaskManagement.App.User
             var resp = _users.Apply(new AddRoles(UserId, UserRoles.Admin));
 
             Assert.IsTrue(resp.Succeeded);
-            Assert.IsTrue(_userRecords.Get(UserId).Roles.Contains(UserRoles.Admin));
+            Assert.IsTrue(_users.Get(UserId).Roles.Contains(UserRoles.Admin));
         }
 
         [TestMethod]
@@ -46,7 +46,7 @@ namespace HomeTaskManagement.App.User
             var resp = _users.Apply(new RemoveRoles(UserId, UserRoles.Admin));
 
             Assert.IsTrue(resp.Succeeded);
-            Assert.IsTrue(!_userRecords.Get(UserId).Roles.Contains(UserRoles.Admin));
+            Assert.IsTrue(!_users.Get(UserId).Roles.Contains(UserRoles.Admin));
         }
 
         private Response CreateUser(params UserRoles[] roles)

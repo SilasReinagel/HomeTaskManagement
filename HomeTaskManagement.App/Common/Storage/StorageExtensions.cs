@@ -14,7 +14,7 @@ namespace HomeTaskManagement.App.Common
 
         public static void Update<T>(this IEntityStore<T> store, string id, Action<T> update)
         {
-            var entity = store.Get(id);
+            var entity = store.Get(id).Value;
             update(entity);
             store.Put(id, entity);
         }

@@ -24,7 +24,7 @@ namespace HomeTaskManagement.App.Task
 
         public TaskRecord Get(string id)
         {
-            return _taskRecords.Get(id);
+            return _taskRecords.Get(id).Value;
         }
 
         public Response Apply(CreateTask req)

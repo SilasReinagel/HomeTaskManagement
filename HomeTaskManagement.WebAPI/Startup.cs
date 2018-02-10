@@ -8,6 +8,7 @@ using HomeTaskManagement.App.Task.Assignment;
 using HomeTaskManagement.App.Task.Instance;
 using HomeTaskManagement.App.User;
 using HomeTaskManagement.Sql;
+using HomeTaskManagement.Sql.Tasks;
 using HomeTaskManagement.Sql.Users;
 using HomeTaskManagement.WebAPI.Auth;
 using Microsoft.AspNetCore;
@@ -36,6 +37,7 @@ namespace HomeTaskManagement.WebAPI
         {
             try
             {
+                services.AddCors();
                 services.AddMvc();
 
                 var sqlDb = new SqlDatabase(new EnvironmentVariable("HomeTaskManagementSqlConnection"));
@@ -49,7 +51,7 @@ namespace HomeTaskManagement.WebAPI
                 services.AddSingleton<IEventStore>(eventStore);
                 var users = new Users(new UsersTable(sqlDb));
                 services.AddSingleton(users);
-                var tasks = new Tasks(new InMemoryEntityStore<TaskRecord>());
+                var tasks = new Tasks(new TasksTable(sqlDb));
                 services.AddSingleton(tasks);
                 var accounts = new Accounts(eventStore);
                 services.AddSingleton(accounts);
@@ -65,7 +67,7 @@ namespace HomeTaskManagement.WebAPI
                     { nameof(SetOverdraftPolicy), new AdminOnly(new JsonCommand<SetOverdraftPolicy>(x => accounts.Apply(x))) },
                     { nameof(TransactionRequest), new AdminOnly(new JsonCommand<TransactionRequest>(x => accounts.Apply(x))) },
 
-                    { nameof(RegisterUser), new JsonCommand<RegisterUser>(x => users.Apply(x)) },
+                    { nameof(RegisterUser), new JsonCommand<RegisterUser>((actor, x) => users.Apply(x.WithId(actor.Id))) },
                     { nameof(AddRoles), new AdminOnly(new JsonCommand<AddRoles>(x => users.Apply(x))) },
                     { nameof(RemoveRoles), new AdminOnly(new JsonCommand<RemoveRoles>(x => users.Apply(x))) },
 
@@ -79,8 +81,8 @@ namespace HomeTaskManagement.WebAPI
 
                     { nameof(MarkTaskComplete), new ApproverOnly(new JsonCommand<MarkTaskComplete>(x => taskInstances.Apply(x))) },
                     { nameof(MarkTaskNotComplete), new JsonCommand<MarkTaskNotComplete>(x => taskInstances.Apply(x)) },
-                    { nameof(MarkTaskFunded), new ServiceOrAdmin(new JsonCommand<MarkTaskNotComplete>(x => taskInstances.Apply(x))) },
-                    { nameof(ScheduleWorkItemsThrough), new ServiceOrAdmin(new JsonCommand<MarkTaskNotComplete>(x => taskInstances.Apply(x))) },
+                    { nameof(MarkTaskFunded), new ServiceOrAdmin(new JsonCommand<MarkTaskFunded>(x => taskInstances.Apply(x))) },
+                    { nameof(ScheduleWorkItemsThrough), new ServiceOrAdmin(new JsonCommand<ScheduleWorkItemsThrough>(x => taskInstances.Apply(x))) },
                     { nameof(WaiveTask), new AdminOnly(new JsonCommand<WaiveTask>(x => taskInstances.Apply(x))) }
                 }));
 
@@ -109,6 +111,11 @@ namespace HomeTaskManagement.WebAPI
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
 
+            app.UseCors(builder => builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
             app.UseMvc();
         }
     }

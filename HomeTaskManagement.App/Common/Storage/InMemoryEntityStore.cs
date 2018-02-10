@@ -11,10 +11,10 @@ namespace HomeTaskManagement.App.Common
             return _items.Values;
         }
 
-        public T Get(string id)
+        public Maybe<T> Get(string id)
         {
             if (!_items.ContainsKey(id))
-                throw new KeyNotFoundException($"Unknown Entity {typeof(T).Name} with Id: {id}");
+                return Maybe<T>.Missing;
             return _items[id];
         }
 

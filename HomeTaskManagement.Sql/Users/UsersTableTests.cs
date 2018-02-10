@@ -40,7 +40,7 @@ namespace HomeTaskManagement.Sql.Users
             _users.Put(SampleUserId, sampleUser);
 
             Assert.IsTrue(_users.GetAll().Any(x => x.Id.Matches(SampleUserId)));
-            var user = _users.Get(sampleUser.Id);
+            var user = _users.Get(sampleUser.Id).Value;
             Assert.AreEqual(sampleUser.Id, user.Id);
             Assert.AreEqual(sampleUser.Username, user.Username);
             Assert.AreEqual(sampleUser.Name, user.Name);

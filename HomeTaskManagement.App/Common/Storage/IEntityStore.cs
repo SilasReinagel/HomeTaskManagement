@@ -6,7 +6,7 @@ namespace HomeTaskManagement.App.Common
     {
         IEnumerable<T> GetAll();
         void Put(string id, T obj);
-        T Get(string id);
+        Maybe<T> Get(string id);
         void Remove(string id);
     }
 }

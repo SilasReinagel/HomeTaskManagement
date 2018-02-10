@@ -21,7 +21,7 @@ namespace HomeTaskManagement.App.Task.Instance
 
         public TaskInstanceRecord Get(string id)
         {
-            return _store.Get(id);
+            return _store.Get(id).Value;
         }
 
         public IEnumerable<TaskInstanceRecord> ActiveItemsDueBefore(UnixUtcTime time)

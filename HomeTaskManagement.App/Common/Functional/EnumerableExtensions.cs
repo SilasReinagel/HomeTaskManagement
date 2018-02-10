@@ -32,5 +32,12 @@ namespace HomeTaskManagement.App.Common
         {
             return items.ToList();
         }
+
+        public static Maybe<T> SingleAsMaybe<T>(this IEnumerable<T> items)
+        {
+            return items.Count() == 0
+                ? Maybe<T>.Missing
+                : items.Single();
+        }
     }
 }
