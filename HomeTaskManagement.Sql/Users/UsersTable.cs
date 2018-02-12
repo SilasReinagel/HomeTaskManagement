@@ -85,7 +85,9 @@ namespace HomeTaskManagement.Sql.Users
                     Id = Id,
                     Username = Username,
                     Name = Name,
-                    Roles = Roles.Split(',').Select(x => (UserRoles)Enum.Parse(typeof(UserRoles), x)).ToHashSet()
+                    Roles = string.IsNullOrWhiteSpace(Roles) 
+                        ? new HashSet<UserRoles>() 
+                        : Roles.Split(',').Select(x => (UserRoles)Enum.Parse(typeof(UserRoles), x)).ToHashSet()
                 };
             }
         }

@@ -22,6 +22,11 @@ namespace HomeTaskManagement.App.Accounting
             return new Account(userId, _eventStore.GetEvents<Account>(userId));
         }
 
+        public Response Apply(OpenAccount req)
+        {
+            return Apply(req.AccountId, req);
+        }
+
         public Response Apply(TransactionRequest req)
         {
             return Apply(req.AccountId, req);

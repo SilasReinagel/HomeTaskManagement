@@ -8,6 +8,7 @@ using HomeTaskManagement.App.Task.Assignment;
 using HomeTaskManagement.App.Task.Instance;
 using HomeTaskManagement.App.User;
 using HomeTaskManagement.Sql;
+using HomeTaskManagement.Sql.EventStore;
 using HomeTaskManagement.Sql.Tasks;
 using HomeTaskManagement.Sql.Users;
 using HomeTaskManagement.WebAPI.Auth;
@@ -47,7 +48,7 @@ namespace HomeTaskManagement.WebAPI
 
                 var messages = new Messages();
                 services.AddSingleton(messages);
-                var eventStore = new InMemoryEventStore();
+                var eventStore = new SqlEventStore(sqlDb, "HomeTask.Events");
                 services.AddSingleton<IEventStore>(eventStore);
                 var users = new Users(new UsersTable(sqlDb));
                 services.AddSingleton(users);
@@ -64,6 +65,7 @@ namespace HomeTaskManagement.WebAPI
 
                 services.AddSingleton(new AppCommands(new Dictionary<string, ICommand>(StringComparer.InvariantCultureIgnoreCase)
                 {
+                    { nameof(OpenAccount), new AdminOnly(new JsonCommand<OpenAccount>(x => accounts.Apply(x))) },
                     { nameof(SetOverdraftPolicy), new AdminOnly(new JsonCommand<SetOverdraftPolicy>(x => accounts.Apply(x))) },
                     { nameof(TransactionRequest), new AdminOnly(new JsonCommand<TransactionRequest>(x => accounts.Apply(x))) },
 

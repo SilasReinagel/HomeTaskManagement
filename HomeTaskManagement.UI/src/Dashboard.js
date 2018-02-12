@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import Drawer from 'material-ui/Drawer';
-import MenuItem from 'material-ui/MenuItem';
+
+import Session from './Session';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -13,6 +13,8 @@ class Dashboard extends Component {
   render() {
     return (
       <div>
+        <br/>
+        <h3>Hello {new Session().username()}</h3>
       </div>
     );
   }

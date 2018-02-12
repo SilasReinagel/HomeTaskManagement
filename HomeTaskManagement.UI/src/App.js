@@ -13,6 +13,7 @@ import Login from './Login';
 import Dashboard from './Dashboard';
 import Session from "./Session";
 import CreateTask from "./CreateTask";
+import Accounts from "./Accounts";
 injectTapEventPlugin();
 
 class App extends Component {  
@@ -37,6 +38,8 @@ class App extends Component {
       view.push(<Dashboard appContext={this}/>);
     } else if(viewName === "Create Task") {
       view.push(<CreateTask appContext={this}/>);
+    } else if(viewName === "Accounts") {
+      view.push(<Accounts appContext={this}/>);
     } else {
       console.log("Unknown view: " + viewName);
     }
@@ -62,6 +65,8 @@ class App extends Component {
               onLeftIconButtonClick={this.openMenu}
               iconElementRight={this.state.isLoggedIn && <FlatButton label="Logout" onClick={(event) => this.logout()}/>}/>
             <Drawer docked={false} open={this.state.menuOpen} onRequestChange={(open) => this.setState({menuOpen:open})}>
+              <MenuItem onClick={() => this.navigateTo("Accounts")}>Accounts</MenuItem>
+              <Divider />
               <MenuItem onClick={() => this.navigateTo("Create Task")}>Create Task</MenuItem>
               <Divider />
             </Drawer>

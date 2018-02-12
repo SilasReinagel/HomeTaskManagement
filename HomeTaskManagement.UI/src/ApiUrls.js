@@ -7,6 +7,10 @@ class ApiUrls {
     static createTask() {
         return "http://localhost:8588/api/command/createtask";
     }
+
+    static viewAllAccounts() {
+        return "http://localhost:8588/api/accounts";
+    }
 }
 
 export default ApiUrls;
