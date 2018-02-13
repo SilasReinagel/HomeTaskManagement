@@ -17,5 +17,10 @@ namespace HomeTaskManagement.App.Common
         {
             _blobs[id] = bytes;
         }
+
+        public void Delete(string id)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

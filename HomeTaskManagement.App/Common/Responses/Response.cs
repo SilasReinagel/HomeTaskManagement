@@ -1,4 +1,5 @@
-﻿namespace HomeTaskManagement.App.Common
+﻿
+namespace HomeTaskManagement.App.Common
 {
     public sealed class Response<T> : Response
     {
