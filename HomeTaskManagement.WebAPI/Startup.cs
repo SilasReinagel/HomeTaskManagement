@@ -1,5 +1,4 @@
 ﻿using HomeTaskManagement.App.Accounting;
-using HomeTaskManagement.App.Commands;
 using HomeTaskManagement.App.Common;
 using HomeTaskManagement.App.Pledge;
 using HomeTaskManagement.App.ServiceJobs;
@@ -21,6 +20,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using HomeTaskManagement.App.Requests;
 
 namespace HomeTaskManagement.WebAPI
 {
@@ -56,32 +57,39 @@ namespace HomeTaskManagement.WebAPI
                 var taskInstances = new TaskInstances(new InMemoryTaskInstanceStore(), assignments, messages);
                 var treasury = new Treasury(new InMemoryBlobStore(), accounts);
 
-                services.AddSingleton(new AppCommands(new Dictionary<string, ICommand>(StringComparer.InvariantCultureIgnoreCase)
+                services.AddSingleton(users);
+
+                services.AddSingleton(new AppCommands(new Dictionary<string, IRequest>(StringComparer.InvariantCultureIgnoreCase)
                 {
-                    { nameof(OpenAccount), new AdminOnly(new JsonCommand<OpenAccount>(x => accounts.Apply(x))) },
-                    { nameof(SetOverdraftPolicy), new AdminOnly(new JsonCommand<SetOverdraftPolicy>(x => accounts.Apply(x))) },
-                    { nameof(TransactionRequest), new AdminOnly(new JsonCommand<TransactionRequest>(x => accounts.Apply(x))) },
+                    { nameof(OpenAccount), new AdminOnly(new JsonRequest<OpenAccount>(x => accounts.Apply(x))) },
+                    { nameof(SetOverdraftPolicy), new AdminOnly(new JsonRequest<SetOverdraftPolicy>(x => accounts.Apply(x))) },
+                    { nameof(TransactionRequest), new AdminOnly(new JsonRequest<TransactionRequest>(x => accounts.Apply(x))) },
 
-                    { nameof(RegisterUser), new JsonCommand<RegisterUser>(x => users.Apply(x)) },
-                    { nameof(UnregisterUser), new JsonCommand<UnregisterUser>(x => users.Apply(x)) },
-                    { nameof(AddRoles), new AdminOnly(new JsonCommand<AddRoles>(x => users.Apply(x))) },
-                    { nameof(RemoveRoles), new AdminOnly(new JsonCommand<RemoveRoles>(x => users.Apply(x))) },
+                    { nameof(RegisterUser), new JsonRequest<RegisterUser>(x => users.Apply(x)) },
+                    { nameof(UnregisterUser), new JsonRequest<UnregisterUser>(x => users.Apply(x)) },
+                    { nameof(AddRoles), new AdminOnly(new JsonRequest<AddRoles>(x => users.Apply(x))) },
+                    { nameof(RemoveRoles), new AdminOnly(new JsonRequest<RemoveRoles>(x => users.Apply(x))) },
 
-                    { nameof(AssignTask), new AdminOnly(new JsonCommand<AssignTask>(x => assignments.Apply(x))) },
+                    { nameof(AssignTask), new AdminOnly(new JsonRequest<AssignTask>(x => assignments.Apply(x))) },
 
-                    { nameof(CreateTask), new AdminOnly(new JsonCommand<CreateTask>(x => tasks.Apply(x))) },
-                    { nameof(DeleteTask), new AdminOnly(new JsonCommand<DeleteTask>(x => tasks.Apply(x))) },
+                    { nameof(CreateTask), new AdminOnly(new JsonRequest<CreateTask>(x => tasks.Apply(x))) },
+                    { nameof(DeleteTask), new AdminOnly(new JsonRequest<DeleteTask>(x => tasks.Apply(x))) },
 
-                    { nameof(SetPledge), new AdminOnly(new JsonCommand<SetPledge>(x => pledges.Apply(x))) },
-                    { nameof(FundPledges), new ServiceOrAdmin(new JsonCommand<FundPledges>(x => pledges.Apply(x))) },
+                    { nameof(SetPledge), new AdminOnly(new JsonRequest<SetPledge>(x => pledges.Apply(x))) },
+                    { nameof(FundPledges), new ServiceOrAdmin(new JsonRequest<FundPledges>(x => pledges.Apply(x))) },
 
-                    { nameof(MarkTaskComplete), new ApproverOnly(new JsonCommand<MarkTaskComplete>(x => taskInstances.Apply(x))) },
-                    { nameof(MarkTaskNotComplete), new JsonCommand<MarkTaskNotComplete>(x => taskInstances.Apply(x)) },
-                    { nameof(MarkTaskFunded), new ServiceOrAdmin(new JsonCommand<MarkTaskFunded>(x => taskInstances.Apply(x))) },
-                    { nameof(ScheduleWorkItemsThrough), new ServiceOrAdmin(new JsonCommand<ScheduleWorkItemsThrough>(x => taskInstances.Apply(x))) },
-                    { nameof(WaiveTask), new AdminOnly(new JsonCommand<WaiveTask>(x => taskInstances.Apply(x))) },
+                    { nameof(MarkTaskComplete), new ApproverOnly(new JsonRequest<MarkTaskComplete>(x => taskInstances.Apply(x))) },
+                    { nameof(MarkTaskNotComplete), new JsonRequest<MarkTaskNotComplete>(x => taskInstances.Apply(x)) },
+                    { nameof(MarkTaskFunded), new ServiceOrAdmin(new JsonRequest<MarkTaskFunded>(x => taskInstances.Apply(x))) },
+                    { nameof(ScheduleWorkItemsThrough), new ServiceOrAdmin(new JsonRequest<ScheduleWorkItemsThrough>(x => taskInstances.Apply(x))) },
+                    { nameof(WaiveTask), new AdminOnly(new JsonRequest<WaiveTask>(x => taskInstances.Apply(x))) },
 
-                    { nameof(RecordExpenditure), new JsonCommand<RecordExpenditure>(x => treasury.Apply(x)) }
+                    { nameof(RecordExpenditure), new JsonRequest<RecordExpenditure>(x => treasury.Apply(x)) }
+                }));
+
+                services.AddSingleton(new AppQueries(new Dictionary<string, IRequest>(StringComparer.InvariantCultureIgnoreCase)
+                {
+                    { "accounts", new ParameterlessRequest(() => accounts.GetAll().Select(x => new AccountBalance { Name = users.Get(x.Id).Name, Balance = x.Balance })) }
                 }));
 
                 new AppRecurringTasks(

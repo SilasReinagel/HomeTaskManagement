@@ -12,11 +12,11 @@ namespace HomeTaskManagement.App.Common
             Assert.AreEqual(status, response.Status, response.ErrorMessage);
         }
 
-        public static Response<Out> Then<In, Out>(this Response<In> resp, Func<In, Out> map)
+        public static Response Then<In, Out>(this Response<In> resp, Func<In, Out> map)
         {
             return resp.Succeeded
                 ? map(resp.Content)
-                : Response<Out>.Errored(resp.Status, resp.ErrorMessage);
+                : Response.Errored<Out>(resp.Status, resp.ErrorMessage);
         }
 
         public static Response Then(this Response resp, Func<Response> nextAction)
@@ -34,7 +34,7 @@ namespace HomeTaskManagement.App.Common
         public static Response Combine(this IEnumerable<Response> responses)
         {
             return responses.All(x => x.Succeeded)
-                ? Response.Success
+                ? Response.Success()
                 : Response.Errored(ResponseStatus.Errored, $"Errors: {string.Join(',', responses.Where(x => !x.Succeeded).Select(x => x.ErrorMessage))}");
         }
     }

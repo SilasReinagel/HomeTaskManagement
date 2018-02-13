@@ -1,6 +1,7 @@
 
 class ApiUrls {
-    static login() {
+    static 
+    login() {
         return "https://miniauth.azurewebsites.net/api/account/applogin";
     }
 
@@ -9,7 +10,7 @@ class ApiUrls {
     }
 
     static viewAllAccounts() {
-        return "http://localhost:8588/api/accounts";
+        return "http://localhost:8588/api/query/accounts";
     }
 }
 

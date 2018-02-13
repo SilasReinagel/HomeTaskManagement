@@ -22,7 +22,7 @@ namespace HomeTaskManagement.WebAPI.Auth
                 : new ValidationResult(result.Item1.ToString());
             return authResult.IsValid
                 ? jwt.Payload<AuthorizedUserId>()
-                : Response<AuthorizedUserId>.Errored(ResponseStatus.Unauthorized, "Unauthorized");
+                : Response.Errored<AuthorizedUserId>(ResponseStatus.Unauthorized, "Unauthorized");
         }
     }
 }

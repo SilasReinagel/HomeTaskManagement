@@ -1,7 +1,7 @@
-﻿using HomeTaskManagement.App.User;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using HomeTaskManagement.App.User;
 
-namespace HomeTaskManagement.App.Commands
+namespace HomeTaskManagement.App.Requests
 {
     public sealed class AppActor
     {

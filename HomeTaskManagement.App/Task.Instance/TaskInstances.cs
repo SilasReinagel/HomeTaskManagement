@@ -63,7 +63,7 @@ namespace HomeTaskManagement.App.Task.Instance
         {
             var task = Get(req.Id);
             if (task.Status == TaskInstanceStatus.Waived || task.Status == TaskInstanceStatus.Completed)
-                return Response.Success;            
+                return Response.Success();            
             if (task.UserId == req.ApproverUserId)
                 return Response.Errored(ResponseStatus.InvalidState, $"Task cannot be waived by the assignee.");
 
@@ -81,7 +81,7 @@ namespace HomeTaskManagement.App.Task.Instance
 
             _messages.Publish(changeMsg);
 
-            return Response.Success;
+            return Response.Success();
         }
 
         private Response Schedule(ProposedTaskInstance task)
@@ -89,7 +89,7 @@ namespace HomeTaskManagement.App.Task.Instance
             var record = TaskInstanceRecord.From(task);
             _store.Put(task.Id, record);
             _messages.Publish(new TaskInstanceScheduled { Record = record });
-            return Response.Success;
+            return Response.Success();
         }
 
         public Response Apply(MarkTaskFunded req)
@@ -98,7 +98,7 @@ namespace HomeTaskManagement.App.Task.Instance
             task.FundedByUserId = req.ByUserId;
             task.FundedOn = req.At;
             _store.Put(task.Id, task);
-            return Response.Success;
+            return Response.Success();
         }
     }
 }

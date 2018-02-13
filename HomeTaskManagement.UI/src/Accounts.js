@@ -49,7 +49,7 @@ class Accounts extends Component {
                 headers: {"Authorization" : "Bearer " + new Session().token()} 
             })
             .then(function(response) {
-                self.setState({isLoading:false, accounts:response.data})
+                self.setState({isLoading:false, accounts:response.data.content})
                 console.log(response);
             })
             .catch(function(error) {

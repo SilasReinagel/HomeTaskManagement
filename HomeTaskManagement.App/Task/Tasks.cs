@@ -30,13 +30,13 @@ namespace HomeTaskManagement.App.Task
         public Response Apply(CreateTask req)
         {
             _taskRecords.Put(req.Id, req.ToRecord());
-            return Response.Success;
+            return Response.Success();
         }
 
         public Response Apply(DeleteTask req)
         {
             _taskRecords.Remove(req.Id);
-            return Response.Success;
+            return Response.Success();
         }
     }
 }

@@ -55,7 +55,7 @@ namespace HomeTaskManagement.App.User
             try
             {
                 action(_userRecords);
-                return Response.Success;
+                return Response.Success();
             }
             catch (Exception e)
             {

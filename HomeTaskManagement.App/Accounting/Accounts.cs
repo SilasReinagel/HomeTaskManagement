@@ -50,7 +50,7 @@ namespace HomeTaskManagement.App.Accounting
                 return Response.Errored(ResponseStatus.InvalidState, $"{srcEventValid.IssuesMessage} {destEventValid.IssuesMessage}");
 
             _eventStore.Commit(srcEvent, destEvent);
-            return Response.Success;
+            return Response.Success();
         }
 
         private Response Apply(string accountId, IConvertToEvent req)
@@ -63,7 +63,7 @@ namespace HomeTaskManagement.App.Accounting
                 return Response.Errored(ResponseStatus.InvalidState, eventValid.IssuesMessage);
 
             _eventStore.Commit(e);
-            return Response.Success;
+            return Response.Success();
         }
     }
 }

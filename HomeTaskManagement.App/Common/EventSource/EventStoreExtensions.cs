@@ -10,7 +10,7 @@ namespace HomeTaskManagement.App.Common
         public static Response Commit(this IEventStore events, params Event[] e)
         {
             events.Commit(e);
-            return Response.Success;
+            return Response.Success();
         }
 
         public static IEnumerable<T> GetAll<T>(this IEventStore eventStore, Func<EventStream, T> createEntity)

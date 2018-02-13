@@ -1,24 +1,22 @@
-﻿using HomeTaskManagement.App.Common;
+﻿using System.Collections.Generic;
+using HomeTaskManagement.App.Common;
 using HomeTaskManagement.App.User;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
 
-namespace HomeTaskManagement.App.Commands
+namespace HomeTaskManagement.App.Requests
 {
     [TestClass]
-    public sealed class AppCommandsTests
+    public sealed class AppRequestsTests
     {
         private readonly string _user1Id = new Id();
-        private readonly string _user2Id = new Id();
         private AppActor _user1;
-        private AppCommands _commands;
+        private AppRequests _requests;
 
         [TestInitialize]
         public void Init()
         {
             _user1 = new AppActor(_user1Id, new DefaultUserRoles());
-            _commands = new AppCommands(new Dictionary<string, ICommand>
+            _requests = new AppCommands(new Dictionary<string, IRequest>
             {
                 { nameof(RegisterUser), new SampleCommand<RegisterUser>() }
             });
@@ -27,7 +25,7 @@ namespace HomeTaskManagement.App.Commands
         [TestMethod]
         public void AppCommands_UnknownCommand_BadRequest()
         {
-            var resp = _commands.Execute(new CommandParams(_user1, "DoUnknownThing", "{}"));
+            var resp = _requests.Execute(new RequestParams(_user1, "DoUnknownThing", "{}"));
 
             resp.AssertStatusIs(ResponseStatus.BadRequest);
             Assert.IsTrue(resp.ErrorMessage.ContainsAnyCase("unknown"));
@@ -36,7 +34,7 @@ namespace HomeTaskManagement.App.Commands
         [TestMethod]
         public void AppCommands_EmptyJsonRequest_BadRequest()
         {
-            var resp = _commands.Execute(new CommandParams(_user1, nameof(RegisterUser), "{}"));
+            var resp = _requests.Execute(new RequestParams(_user1, nameof(RegisterUser), "{}"));
 
             resp.AssertStatusIs(ResponseStatus.BadRequest);
             Assert.IsTrue(resp.ErrorMessage.ContainsAnyCase("name"));
@@ -45,17 +43,17 @@ namespace HomeTaskManagement.App.Commands
         [TestMethod]
         public void AppCommands_ValidRequest_ResponseIsSuccess()
         {
-            var resp = _commands.Execute(new CommandParams(_user1, nameof(RegisterUser), Json.ToString(new RegisterUser(new Id(), "username", "name"))));
+            var resp = _requests.Execute(new RequestParams(_user1, nameof(RegisterUser), Json.ToString(new RegisterUser(new Id(), "username", "name"))));
 
             resp.AssertStatusIs(ResponseStatus.Succeeded);
         }
 
-        private class SampleCommand<T> : ICommand
+        private class SampleCommand<T> : IRequest
         {
-            public Response Execute(CommandParams req)
+            public Response GetResponse(RequestParams req)
             {
                 var request = Json.ToObject<T>(req.JsonRequest);
-                return Response.Success;
+                return Response.Success();
             }
         }
     }

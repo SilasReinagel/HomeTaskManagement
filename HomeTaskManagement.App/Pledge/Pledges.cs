@@ -44,7 +44,7 @@ namespace HomeTaskManagement.App.Pledge
         {
             var pledgeAmount = pledge.AmountAt(Clock.UnixUtcNow);
             if (pledgeAmount == 0 || !through.IsAfter(pledge.FundedThrough))
-                return Response.Success;
+                return Response.Success();
 
             var currencyAmount = _settings.RatePerUnit * pledgeAmount;
             var funded = _accounts.Apply(new TransferRequest(pledge.UserId, _settings.TargetAccount, $"Funded Treasury Pledge - {pledgeAmount} Units", currencyAmount));
@@ -56,7 +56,7 @@ namespace HomeTaskManagement.App.Pledge
             if (through.IsAfter(fundedThrough))
                 return Fund(Get(pledge.UserId), through);
 
-            return Response.Success;
+            return Response.Success();
         }
 
         private IEnumerable<UserPledge> GetAll()
