@@ -13,11 +13,5 @@ namespace HomeTaskManagement.App.User
             Username = username;
             Name = name;
         }
-
-        public RegisterUser WithId(string id)
-        {
-            Id = id;
-            return this;
-        }
     }
 }

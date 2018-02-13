@@ -62,7 +62,8 @@ namespace HomeTaskManagement.WebAPI
                     { nameof(SetOverdraftPolicy), new AdminOnly(new JsonCommand<SetOverdraftPolicy>(x => accounts.Apply(x))) },
                     { nameof(TransactionRequest), new AdminOnly(new JsonCommand<TransactionRequest>(x => accounts.Apply(x))) },
 
-                    { nameof(RegisterUser), new JsonCommand<RegisterUser>((actor, x) => users.Apply(x.WithId(actor.Id))) },
+                    { nameof(RegisterUser), new JsonCommand<RegisterUser>(x => users.Apply(x)) },
+                    { nameof(UnregisterUser), new JsonCommand<UnregisterUser>(x => users.Apply(x)) },
                     { nameof(AddRoles), new AdminOnly(new JsonCommand<AddRoles>(x => users.Apply(x))) },
                     { nameof(RemoveRoles), new AdminOnly(new JsonCommand<RemoveRoles>(x => users.Apply(x))) },
 

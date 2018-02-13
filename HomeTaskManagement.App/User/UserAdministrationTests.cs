@@ -28,6 +28,17 @@ namespace HomeTaskManagement.App.User
         }
 
         [TestMethod]
+        public void Users_DestroyUser_userDestroyed()
+        {
+            CreateUser();
+
+            var resp = _users.Apply(new UnregisterUser(UserId));
+
+            Assert.IsTrue(resp.Succeeded);
+            Assert.IsFalse(_users.Exists(UserId));
+        }
+
+        [TestMethod]
         public void Users_AddRolesToUser_UserHasRoles()
         {
             CreateUser();
