@@ -35,6 +35,11 @@ namespace HomeTaskManagement.App.User
                     }));
         }
 
+        public Response Apply(UnregisterUser req)
+        {
+            return Record(x => x.Remove(req.Id));
+        }
+
         public Response Apply(AddRoles req)
         {
             return Record(x => _userRecords.Update(req.UserId, u => u.Roles = u.Roles.Union(req.Roles).ToHashSet()));
