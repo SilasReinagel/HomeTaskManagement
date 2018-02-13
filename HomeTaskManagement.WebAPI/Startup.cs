@@ -3,6 +3,7 @@ using HomeTaskManagement.App.Commands;
 using HomeTaskManagement.App.Common;
 using HomeTaskManagement.App.Pledge;
 using HomeTaskManagement.App.ServiceJobs;
+using HomeTaskManagement.App.Shopping;
 using HomeTaskManagement.App.Task;
 using HomeTaskManagement.App.Task.Assignment;
 using HomeTaskManagement.App.Task.Instance;
@@ -42,26 +43,18 @@ namespace HomeTaskManagement.WebAPI
                 services.AddMvc();
 
                 var sqlDb = new SqlDatabase(new EnvironmentVariable("HomeTaskManagementSqlConnection"));
-                services.AddSingleton(sqlDb);
                 services.AddSingleton(new MiniAuth(new EnvironmentVariable("HomeTaskManagementSecret")));
                 services.AddSingleton(new AppHealth(TimeSpan.FromMinutes(15), sqlDb));
 
                 var messages = new Messages();
-                services.AddSingleton(messages);
                 var eventStore = new SqlEventStore(sqlDb, "HomeTask.Events");
-                services.AddSingleton<IEventStore>(eventStore);
                 var users = new Users(new UsersTable(sqlDb));
-                services.AddSingleton(users);
                 var tasks = new Tasks(new TasksTable(sqlDb));
-                services.AddSingleton(tasks);
                 var accounts = new Accounts(eventStore);
-                services.AddSingleton(accounts);
                 var pledges = new Pledges(eventStore, users, accounts, new PledgeFundingSettings());
-                services.AddSingleton(pledges);
                 var assignments = new TaskAssignments(eventStore, tasks, users, new AssignmentSettings());
-                services.AddSingleton(assignments);
                 var taskInstances = new TaskInstances(new InMemoryTaskInstanceStore(), assignments, messages);
-                services.AddSingleton(taskInstances);
+                var treasury = new Treasury(new InMemoryBlobStore(), accounts);
 
                 services.AddSingleton(new AppCommands(new Dictionary<string, ICommand>(StringComparer.InvariantCultureIgnoreCase)
                 {
@@ -85,7 +78,9 @@ namespace HomeTaskManagement.WebAPI
                     { nameof(MarkTaskNotComplete), new JsonCommand<MarkTaskNotComplete>(x => taskInstances.Apply(x)) },
                     { nameof(MarkTaskFunded), new ServiceOrAdmin(new JsonCommand<MarkTaskFunded>(x => taskInstances.Apply(x))) },
                     { nameof(ScheduleWorkItemsThrough), new ServiceOrAdmin(new JsonCommand<ScheduleWorkItemsThrough>(x => taskInstances.Apply(x))) },
-                    { nameof(WaiveTask), new AdminOnly(new JsonCommand<WaiveTask>(x => taskInstances.Apply(x))) }
+                    { nameof(WaiveTask), new AdminOnly(new JsonCommand<WaiveTask>(x => taskInstances.Apply(x))) },
+
+                    { nameof(RecordExpenditure), new JsonCommand<RecordExpenditure>(x => treasury.Apply(x)) }
                 }));
 
                 new AppRecurringTasks(
