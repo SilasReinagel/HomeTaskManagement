@@ -9,6 +9,7 @@ using HomeTaskManagement.App.Task.Assignment;
 using HomeTaskManagement.App.Task.Instance;
 using HomeTaskManagement.App.User;
 using HomeTaskManagement.Sql;
+using HomeTaskManagement.Sql.BlobStore;
 using HomeTaskManagement.Sql.EventStore;
 using HomeTaskManagement.Sql.Tasks;
 using HomeTaskManagement.Sql.Users;
@@ -45,16 +46,19 @@ namespace HomeTaskManagement.WebAPI
                 var sqlDb = new SqlDatabase(new EnvironmentVariable("HomeTaskManagementSqlConnection"));
                 services.AddSingleton(new MiniAuth(new EnvironmentVariable("HomeTaskManagementSecret")));
                 services.AddSingleton(new AppHealth(TimeSpan.FromMinutes(15), sqlDb));
+                var eventStore = new SqlEventStore(sqlDb, "HomeTask.Events");
+                var blobStore = new SqlBlobStore(sqlDb, "HomeTask.Blobs");
 
                 var messages = new Messages();
-                var eventStore = new SqlEventStore(sqlDb, "HomeTask.Events");
                 var users = new Users(new UsersTable(sqlDb));
+                services.AddSingleton(users);
                 var tasks = new Tasks(new TasksTable(sqlDb));
                 var accounts = new Accounts(eventStore);
+                services.AddSingleton(accounts);
                 var pledges = new Pledges(eventStore, users, accounts, new PledgeFundingSettings());
                 var assignments = new TaskAssignments(eventStore, tasks, users, new AssignmentSettings());
                 var taskInstances = new TaskInstances(new InMemoryTaskInstanceStore(), assignments, messages);
-                var treasury = new Treasury(new InMemoryBlobStore(), accounts);
+                var treasury = new Treasury(blobStore, accounts);
 
                 services.AddSingleton(new AppCommands(new Dictionary<string, ICommand>(StringComparer.InvariantCultureIgnoreCase)
                 {

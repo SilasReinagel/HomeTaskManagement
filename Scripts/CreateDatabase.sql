@@ -82,3 +82,13 @@ CREATE INDEX idx_EntityType ON HomeTask.Events (EntityType)
 CREATE INDEX idx_EntityType_EntityId ON HomeTask.Events (EntityType, EntityId)
 CREATE INDEX idx_EntityType_EntityId_OccurredAt ON HomeTask.Events (EntityType, EntityId, OccurredAt)
 GO
+
+---------- Create BlobStore Table ----------
+
+IF (EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'HomeTask'  AND  TABLE_NAME = 'Blobs'))
+	DROP TABLE HomeTask.Blobs
+
+CREATE TABLE HomeTask.Blobs (
+	Id varchar(255) NOT NULL PRIMARY KEY,
+	Value varbinary(MAX) NOT NULL
+)

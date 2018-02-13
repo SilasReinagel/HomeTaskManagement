@@ -1,38 +1,52 @@
 ﻿
 namespace HomeTaskManagement.App.Common
 {
-    public sealed class Response
+    public sealed class Response : Response<byte[]>
     {
-        public ResponseStatus Status { get; }
-        public string ErrorMessage { get; }
-        internal bool Succeeded => Status == ResponseStatus.Succeeded;
+        private new byte[] Content { get; }
 
         private Response(ResponseStatus status, string errorMessage)
-        {
-            Status = status;
-            ErrorMessage = errorMessage;
-        }
+            : base(new byte[0], status, errorMessage) { }
 
-        public static Response Success => new Response(ResponseStatus.Succeeded, "");
-        public static Response Errored(ResponseStatus status, string errorMessage) => new Response(status, errorMessage);
+        public new static Response Success => new Response(ResponseStatus.Succeeded, "");
+        public new static Response Errored(ResponseStatus status, string errorMessage) => new Response(status, errorMessage);
     }
 
-    public sealed class Response<T>
+    public sealed class ContentResponse<T> : Response<T>
+    {
+        private ContentResponse(T content)
+            : base(content) { }
+
+        private ContentResponse(ResponseStatus status, string errorMessage)
+            : base(status, errorMessage) { }
+
+        public new static Response<T> Success(T content) => new ContentResponse<T>(content);
+        public new static Response<T> Errored(ResponseStatus status, string errorMessage) => new ContentResponse<T>(status, errorMessage);
+    }
+
+    public abstract class Response<T>
     {
         public T Content { get; }
         public ResponseStatus Status { get; }
         public string ErrorMessage { get; }
         internal bool Succeeded => Status == ResponseStatus.Succeeded;
 
-        private Response(T content)
+        protected Response(T content)
         {
             Content = content;
             Status = ResponseStatus.Succeeded;
             ErrorMessage = "";
         }
 
-        private Response(ResponseStatus status, string errorMessage)
+        protected Response(ResponseStatus status, string errorMessage)
         {
+            Status = status;
+            ErrorMessage = errorMessage;
+        }
+
+        protected Response(T content, ResponseStatus status, string errorMessage)
+        {
+            Content = content;
             Status = status;
             ErrorMessage = errorMessage;
         }
@@ -42,7 +56,7 @@ namespace HomeTaskManagement.App.Common
             return Success(content);
         }
 
-        public static Response<T> Success(T content) => new Response<T>(content);
-        public static Response<T> Errored(ResponseStatus status, string errorMessage) => new Response<T>(status, errorMessage);
+        public static Response<T> Success(T content) => ContentResponse<T>.Success(content);
+        public static Response<T> Errored(ResponseStatus status, string errorMessage) => ContentResponse<T>.Errored(status, errorMessage);
     }
 }

@@ -5,5 +5,6 @@ namespace HomeTaskManagement.App.Common
     {
         Maybe<byte[]> Get(string id);
         void Put(string id, byte[] bytes);
+        void Delete(string id);
     }
 }
