@@ -28,6 +28,13 @@ namespace HomeTaskManagement.WebAPI.Controllers
         }
 
         [HttpPost]
+        [Route("query/{queryName}")]
+        public IActionResult QueryWithParams([FromServices]AppQueries queries, string queryName)
+        {
+            return GetResponse(queries, queryName);
+        }
+
+        [HttpPost]
         [Route("command/{commandName}")]
         public IActionResult Execute([FromServices]AppCommands commands, string commandName)
         {

@@ -93,7 +93,8 @@ namespace HomeTaskManagement.WebAPI
 
                 services.AddSingleton(new AppQueries(new Dictionary<string, IRequest>(StringComparer.InvariantCultureIgnoreCase)
                 {
-                    { "accounts", new ParameterlessRequest(() => accounts.GetAll().Select(x => new AccountBalance { Name = users.Get(x.Id).Name, Balance = x.Balance })) }
+                    { "accounts", new ParameterlessRequest(() => accounts.GetAll().Select(x => new AccountBalance { Name = users.Get(x.Id).Name, Balance = x.Balance })) },
+                    { nameof(Account), new JsonRequest<GetById>(x => Response.Success(accounts.Get(x.Id))) }
                 }));
 
                 new AppRecurringTasks(

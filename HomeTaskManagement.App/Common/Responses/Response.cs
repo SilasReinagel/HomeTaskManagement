@@ -16,7 +16,7 @@ namespace HomeTaskManagement.App.Common
         public static implicit operator Response<T>(T content)
         {
             return new Response<T>(content);
-        } 
+        }
     }
 
     public abstract class Response
